@@ -1,0 +1,311 @@
+/* ==========================================================================
+   TravelGenie — About
+   Reuses tokens from base.css (--primary-blue, --gradient-blue, --bg,
+   --card-white, --light-blue, --text, --text-muted, --border, --shadow-*,
+   --radius-*, --font-heading, --ease, .btn, .btn-filled, .reveal)
+   ========================================================================== */
+ 
+/* ---------------- Hero ---------------- */
+.ab-hero {
+  position: relative;
+  min-height: 260px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--cta-blue-start), var(--gradient-blue));
+  display: flex;
+  align-items: center;
+  padding: 36px 40px;
+}
+ 
+.ab-hero-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+ 
+.ab-mountain {
+  position: absolute;
+  bottom: -10px;
+  border-style: solid;
+  opacity: 0.35;
+}
+ 
+.ab-mountain-1 {
+  right: 60px;
+  border-width: 0 70px 90px 70px;
+  border-color: transparent transparent rgba(255, 255, 255, 0.5) transparent;
+}
+ 
+.ab-mountain-2 {
+  right: -20px;
+  border-width: 0 55px 65px 55px;
+  border-color: transparent transparent rgba(255, 255, 255, 0.35) transparent;
+}
+ 
+.ab-route {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 55%;
+  height: 100%;
+}
+ 
+.ab-plane {
+  position: absolute;
+  right: 28%;
+  top: 30px;
+  width: 26px;
+  height: 26px;
+  transform: rotate(18deg);
+  opacity: 0.9;
+}
+ 
+.ab-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+}
+ 
+.ab-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+ 
+.ab-heading {
+  font-family: var(--font-heading);
+  font-size: 32px;
+  font-weight: 700;
+  color: white;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+ 
+.ab-subheading {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.92);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+ 
+.ab-explore-btn {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+ 
+.ab-explore-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+}
+ 
+/* ---------------- Our Story ---------------- */
+.ab-story-card {
+  margin-top: 22px;
+  background: var(--card-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 24px 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+ 
+.ab-story-icon {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: var(--light-blue);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.ab-story-text h2 {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+ 
+.ab-story-text p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  max-width: 620px;
+}
+ 
+/* ---------------- Why Choose TravelGenie ---------------- */
+.ab-features {
+  margin-top: 32px;
+}
+ 
+.ab-section-title {
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+ 
+.ab-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+ 
+.ab-feature-card {
+  background: var(--card-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 22px 20px;
+  transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+ 
+.ab-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+}
+ 
+.ab-feature-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--light-blue);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+ 
+.ab-feature-card:hover .ab-feature-icon {
+  background: var(--primary-blue);
+  color: white;
+}
+ 
+.ab-feature-card h3 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+ 
+.ab-feature-card p {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+ 
+/* ---------------- Statistics ---------------- */
+.ab-stats {
+  margin-top: 32px;
+  background: var(--card-white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 24px 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+ 
+.ab-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+ 
+.ab-stat-num {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-blue);
+}
+ 
+.ab-stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+ 
+/* ---------------- CTA ---------------- */
+.ab-cta {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  background: linear-gradient(135deg, var(--cta-blue-start), var(--cta-blue-end));
+  border-radius: var(--radius-lg);
+  padding: 34px 30px;
+  text-align: center;
+}
+ 
+.ab-cta h2 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+ 
+.ab-cta p {
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 20px;
+}
+ 
+.ab-cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+ 
+.ab-cta-btn-filled {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+}
+ 
+.ab-cta-btn-filled:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.2);
+}
+ 
+.ab-cta-btn-outline {
+  background: transparent;
+  color: white;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+}
+ 
+.ab-cta-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+ 
+/* ---------------- Responsive ---------------- */
+@media (max-width: 900px) {
+  .ab-feature-grid { grid-template-columns: 1fr; }
+  .ab-stats { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
+  .ab-hero-art { display: none; }
+}
+ 
+@media (max-width: 640px) {
+  .ab-hero { padding: 28px 22px; min-height: 220px; }
+  .ab-heading { font-size: 24px; }
+  .ab-story-card { flex-direction: column; padding: 20px; }
+  .ab-cta { padding: 26px 20px; }
+}
+ 

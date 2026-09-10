@@ -1,0 +1,559 @@
+/* =========================================================
+   0. CSS VARIABLES
+========================================================= */
+:root {
+  --primary-blue: #798071;
+  --primary-blue-hover: #B2B69D;
+  --cta-blue-start: #B2B69D;
+  --cta-blue-end: #798071;
+  --gradient-blue: #798071;
+  --bg: #F2F2F2;
+  --card-white: #CBCBCB;
+  --light-blue: #B2B69D;
+  --text: #111A2C;
+  --text-muted: #4A5B72;
+  --heading-dark: #798071;
+  --border: #B2B69D;
+  --shadow-sm: 0 4px 14px rgba(121, 128, 113, 0.12);
+  --shadow-md: 0 10px 30px rgba(121, 128, 113, 0.18);
+  --shadow-lg: 0 20px 50px rgba(121, 128, 113, 0.24);
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 26px;
+  --sidebar-w: 220px;
+  --font-heading: 'Space Grotesk', 'Poppins', sans-serif;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+ 
+[data-theme="dark"] {
+  --bg: #0F1420;
+  --card-white: #171E2E;
+  --light-blue: #1D2740;
+  --text: #EAF0FB;
+  --text-muted: #8D97AC;
+  --border: #262F45;
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.45);
+}
+ 
+/* =========================================================
+   1. RESET & BASE
+========================================================= */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+ 
+html { scroll-behavior: smooth; }
+ 
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease);
+}
+ 
+h1, h2, h3, .logo, .cta-label { font-family: var(--font-heading); }
+ 
+img { display: block; max-width: 100%; }
+ 
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+ 
+a { text-decoration: none; color: inherit; }
+ 
+/* =========================================================
+   2. FLOATING HAMBURGER (visible when sidebar closed)
+========================================================= */
+.hamburger-fab {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--card-white);
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  z-index: 1200;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.7);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+}
+ 
+.hamburger-fab.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
+ 
+.hamburger-fab:hover { box-shadow: var(--shadow-lg); transform: scale(1.06); }
+ 
+/* =========================================================
+   3. SIDEBAR
+========================================================= */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-w);
+  background: var(--card-white);
+  box-shadow: var(--shadow-md);
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px;
+  transform: translateX(-100%);
+  transition: transform 0.4s var(--ease);
+}
+
+.sidebar.open { transform: translateX(0); }
+ 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px 20px 6px;
+}
+ 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+ 
+.logo em {
+  font-style: normal;
+  color: var(--primary-blue);
+}
+ 
+.sidebar-close {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+ 
+.sidebar-close:hover { background: var(--light-blue); color: var(--primary-blue); }
+ 
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+}
+ 
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 12px 6px;
+}
+ 
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+ 
+.nav-icon { display: flex; align-items: center; justify-content: center; }
+ 
+.nav-item:hover {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+  transform: translateX(2px);
+}
+ 
+.nav-item.active {
+  background: var(--primary-blue);
+  color: white;
+  font-weight: 600;
+}
+ 
+.sidebar-footer-card {
+  margin-top: auto;
+  background: linear-gradient(135deg, var(--primary-blue), var(--gradient-blue));
+  border-radius: var(--radius-md);
+  padding: 20px 16px;
+  color: white;
+  text-align: center;
+}
+ 
+.sidebar-footer-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px auto;
+}
+ 
+.sidebar-footer-card p {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+ 
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 20, 32, 0.45);
+  z-index: 1050;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease);
+}
+ 
+.sidebar-overlay.visible { opacity: 1; pointer-events: auto; }
+ 
+/* =========================================================
+   4. MAIN LAYOUT
+========================================================= */
+.main {
+  margin-left: 0;
+  min-height: 100vh;
+  transition: margin-left 0.4s var(--ease);
+  padding: 20px 36px 0 36px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+ 
+/* =========================================================
+   5. TOP NAVIGATION
+========================================================= */
+.topbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 10px 0;
+}
+
+.topbar-center {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+/* Airplane Floating Indicator */
+.airplane-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100px;
+  height: 100px;
+  background-color: #FFB6C1; /* Light pink */
+  -webkit-mask-image: url('../images/plane-watermark.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('../images/plane-watermark.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  opacity: 0.9;
+  z-index: 0;
+  pointer-events: none;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  filter: drop-shadow(0 4px 8px rgba(244, 205, 205, 0.6));
+}
+
+.airplane-indicator.fly-right {
+  /* When moving right, tilt down-right slightly */
+  margin-top: 4px;
+  transform: translate(-50%, -50%) rotate(15deg);
+}
+
+.airplane-indicator.fly-left {
+  /* When moving left, tilt up-left slightly */
+  margin-top: -4px;
+  transform: translate(-50%, -50%) rotate(-15deg);
+}
+
+.airplane-indicator::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  width: 40px;
+  height: 2px;
+  background: linear-gradient(to left, rgba(255,255,255,0.8), transparent);
+  transform: translateY(-50%);
+  opacity: 0.5;
+}
+
+.flight-path-curve {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50px); /* Adjust to align with airplane center */
+  z-index: 0;
+  pointer-events: none;
+  animation: flightPathAnim 0.8s ease-out forwards;
+}
+
+.flight-path-curve path {
+  fill: none;
+  stroke: var(--primary-blue);
+  stroke-width: 2.5;
+  stroke-dasharray: 8 6;
+  opacity: 0.6;
+}
+
+[data-theme="dark"] .flight-path-curve path {
+  stroke: var(--primary-blue);
+}
+
+@keyframes flightPathAnim {
+  0% { opacity: 0; stroke-dashoffset: 20; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; stroke-dashoffset: -20; }
+}
+
+.airplane-indicator.fly-arc {
+  animation: airplaneArc 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes airplaneArc {
+  0% { margin-top: 0; }
+  50% { margin-top: -35px; } /* Matches the Q control point of the SVG arc */
+  100% { margin-top: 0; }
+}
+
+.topbar .logo {
+  color: var(--text);
+}
+.topbar .logo em {
+  color: var(--primary-blue);
+}
+
+.top-nav-item {
+  position: relative;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.2s var(--ease);
+  padding: 8px 16px;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.top-nav-item:hover {
+  color: var(--primary-blue);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.top-nav-item.active {
+  font-weight: 700;
+  color: var(--primary-blue);
+  background: none;
+  -webkit-text-fill-color: initial;
+}
+
+.top-nav-item::after {
+  display: none;
+}
+
+.mobile-only {
+  display: none;
+}
+
+.menu-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--card-white);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.menu-btn:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card-white);
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s var(--ease), transform 0.4s var(--ease);
+}
+ 
+.theme-toggle:hover { box-shadow: var(--shadow-md); transform: rotate(20deg); }
+ 
+.btn {
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 600;
+  display: inline-block;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
+}
+ 
+.btn-outline {
+  background: var(--card-white);
+  color: var(--primary-blue);
+  box-shadow: var(--shadow-sm);
+}
+ 
+.btn-outline:hover { background: var(--primary-blue); color: white; transform: translateY(-2px); box-shadow: var(--shadow-md); }
+ 
+.btn-filled {
+  background: var(--primary-blue);
+  color: white;
+  box-shadow: 0 8px 20px rgba(197, 181, 213, 0.28);
+}
+ 
+.btn-filled:hover { background: var(--primary-blue-hover); transform: translateY(-2px); box-shadow: 0 12px 26px rgba(197, 181, 213, 0.35); }
+ 
+/* =========================================================
+   6. FOOTER
+========================================================= */
+.footer {
+  text-align: center;
+  padding: 30px 24px 26px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+ 
+.footer a { color: var(--primary-blue); font-weight: 600; }
+.footer a:hover { color: var(--primary-blue-hover); }
+ 
+/* =========================================================
+   7. SCROLL REVEAL (shared animation)
+========================================================= */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+ 
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+ 
+/* =========================================================
+   8. RESPONSIVE (shared layout)
+========================================================= */
+@media (max-width: 900px) {
+  .topbar-center { display: none; }
+  .desktop-only { display: none; }
+  .mobile-only { display: flex; }
+  .main { padding: 20px 16px 0 16px; }
+  .btn { padding: 8px 16px; font-size: 13px; }
+  .topbar { margin-bottom: 16px; }
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger-fab { display: none; }
+  .menu-btn { display: flex; }
+}
+ 
+@media (min-width: 901px) {
+  .sidebar-overlay { display: none; }
+}
+ 
+@media (max-width: 480px) {
+  .main { padding: 16px 14px 0; }
+  .topbar-right { gap: 8px; }
+  .btn { padding: 9px 16px; font-size: 13px; }
+}
+ 
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+ 
+/* Keyboard focus visibility */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+ 
+
+/* ==========================================================================
+   Toast Notifications
+   ========================================================================== */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+.toast-container.fade-out {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+}
+.toast-alert {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 300px;
+  max-width: 400px;
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  padding: 16px;
+  animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  border-left: 4px solid var(--primary);
+}
+@keyframes toastSlideIn {
+  0% { transform: translateX(120%); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+.toast-alert.alert-error { border-left-color: #E0554B; }
+.toast-alert.alert-error i { color: #E0554B; }
+.toast-alert.alert-success { border-left-color: #00C48C; }
+.toast-alert.alert-success i { color: #00C48C; }
+.toast-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+.toast-close {
+  color: var(--ink-faint);
+  transition: color 0.2s ease;
+}
+.toast-close:hover {
+  color: var(--ink);
+}

@@ -4,23 +4,11 @@
     {
       "src": "TravelGenie/wsgi.py",
       "use": "@vercel/python"
-    },
-    {
-      "src": "build.sh",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "staticfiles"
-      }
     }
   ],
   "routes": [
     {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
-    },
-
-    {
-      "src": "(.*)",
+      "src": "/(.*)",
       "dest": "TravelGenie/wsgi.py"
     }
   ]

@@ -1,0 +1,354 @@
+/* =========================================================
+   DASHBOARD SPECIFIC STYLES
+========================================================= */
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ---------- HERO SECTION ---------- */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+  border-radius: var(--r-lg);
+  padding: 40px;
+  color: #fff;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.hero-glow {
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 60%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(197, 181, 213,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-left {
+  position: relative;
+  z-index: 2;
+  max-width: 500px;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--blue-2);
+  margin-bottom: 12px;
+}
+
+.hero-left h1 {
+  font-size: 32px;
+  margin: 0 0 12px 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-left p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.hero-btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero-btn.primary {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(197, 181, 213,0.4);
+}
+
+.hero-btn.primary:hover {
+  background: var(--blue-2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(197, 181, 213,0.5);
+}
+
+.hero-btn.ghost {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.hero-btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.hero-art {
+  position: absolute;
+  right: -20px;
+  top: -20px;
+  width: 400px;
+  height: 250px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dash-fly {
+  stroke-dasharray: 400;
+  stroke-dashoffset: 400;
+  animation: flyRoute 4s ease-in-out infinite;
+}
+
+@keyframes flyRoute {
+  0% { stroke-dashoffset: 400; }
+  50% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -400; }
+}
+
+.pin-pulse {
+  animation: pulsePin 2s infinite;
+}
+
+.pin-pulse.d2 {
+  animation-delay: 1s;
+}
+
+@keyframes pulsePin {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.plane-float {
+  animation: floatPlane 6s ease-in-out infinite;
+}
+
+@keyframes floatPlane {
+  0%, 100% { transform: translate(228px, 30px) rotate(35deg) translateY(0); }
+  50% { transform: translate(228px, 30px) rotate(35deg) translateY(-10px); }
+}
+
+/* ---------- SECTION HEADER ---------- */
+.section-head {
+  margin-bottom: 16px;
+}
+
+.section-head h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+}
+
+/* ---------- QUICK ACTIONS ---------- */
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.qa-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.qa-card:hover {
+  border-color: var(--blue-2);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.qa-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--pill-bg);
+  color: var(--blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+.qa-card:hover .qa-icon {
+  background: var(--blue);
+  color: #fff;
+}
+
+.qa-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.qa-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* ---------- ROWS & CARDS ---------- */
+.row-2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.card-sub {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+/* ---------- TABLES ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+td {
+  padding: 16px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--table-row-line);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+.table-empty-body td {
+  padding: 40px 16px;
+  text-align: center;
+}
+
+.empty-route {
+  color: var(--line);
+  display: flex;
+  justify-content: center;
+}
+
+.empty-route svg {
+  width: 120px;
+  height: 56px;
+}
+
+/* ---------- CHARTS ---------- */
+.chart-canvas {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.chart-card svg {
+  width: 100%;
+  height: auto;
+}
+
+.donut-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.legend-row {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .row-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 32px 20px;
+  }
+  
+  .hero-left {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .hero-art {
+    display: none;
+  }
+}

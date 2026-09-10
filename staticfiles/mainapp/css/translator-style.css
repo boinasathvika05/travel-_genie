@@ -1,0 +1,383 @@
+/* ==========================================================================
+   TravelGenie — AI Translator
+   Reuses tokens & base classes from dashboard-style.css
+   (.hero, .hero-text, .fade-in-up, .section-head, .card-link, --primary, etc.)
+   ========================================================================== */
+ 
+/* ---------------- Hero ---------------- */
+.tr-hero{
+  min-height:180px;
+  align-items:center;
+  justify-content:flex-start;
+  padding:24px 40px;
+}
+.tr-hero-text{max-width:480px;}
+.tr-hero-text h1{font-size:28px;}
+.tr-hero-text p{font-size:14px;max-width:340px;}
+ 
+.tr-hero-art{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+}
+ 
+.tr-globe{
+  position:absolute;
+  right:280px;
+  top:50%;
+  transform:translateY(-50%);
+  width:120px;height:120px;
+  opacity:.55;
+}
+ 
+.tr-bubble{
+  position:absolute;
+  background:rgba(255,255,255,0.16);
+  border:1px solid rgba(255,255,255,0.35);
+  color:rgba(255,255,255,0.9);
+  font-size:11px;font-weight:600;
+  padding:6px 12px;
+  border-radius:999px;
+  backdrop-filter:blur(2px);
+}
+.tr-bubble-1{right:430px;top:26px;}
+.tr-bubble-2{right:520px;top:70px;}
+.tr-bubble-3{right:350px;top:60px;}
+.tr-bubble-4{right:470px;top:120px;}
+ 
+.tr-plane{
+  position:absolute;
+  right:150px;
+  bottom:34px;
+  width:34px;height:34px;
+  opacity:.7;
+  transform:rotate(8deg);
+}
+ 
+.tr-cloud{
+  position:absolute;
+  color:rgba(255,255,255,0.35);
+  font-size:20px;
+}
+.tr-cloud-1{right:60px;top:24px;}
+.tr-cloud-2{right:230px;top:16px;font-size:15px;}
+ 
+.tr-landmark{
+  position:absolute;
+  color:rgba(255,255,255,0.32);
+  font-size:60px;
+  bottom:-10px;
+}
+.tr-landmark-1{right:180px;font-size:70px;}
+.tr-landmark-2{right:90px;font-size:56px;opacity:.5;}
+.tr-landmark-3{right:0;font-size:64px;opacity:.4;}
+ 
+.tr-pin{
+  position:absolute;
+  right:20px;top:40%;
+  color:rgba(255,255,255,0.55);
+  font-size:22px;
+}
+ 
+@media (max-width:1024px){
+  .tr-hero-art{display:none;}
+}
+ 
+/* ---------------- Layout ---------------- */
+.tr-layout{
+  display:grid;
+  grid-template-columns:70% 30%;
+  gap:20px;
+  align-items:start;
+}
+ 
+.tr-workspace{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+ 
+/* ---------------- Cards ---------------- */
+.tr-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);
+  transition:box-shadow .25s ease;
+}
+ 
+.tr-panels{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:16px;
+  align-items:stretch;
+  position:relative;
+}
+ 
+.tr-panel-card{
+  padding:18px 18px 16px;
+  display:flex;
+  flex-direction:column;
+}
+ 
+.tr-panel-head{margin-bottom:12px;}
+.tr-panel-label{font-size:14px;font-weight:700;color:var(--ink);}
+ 
+/* ---------------- Controls row ---------------- */
+.tr-controls-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+  flex-wrap:wrap;
+}
+.tr-controls-row-target{justify-content:space-between;}
+ 
+.tr-lang-select{
+  position:relative;
+  display:flex;
+  align-items:center;
+  min-width:140px;
+}
+.tr-lang-select select{
+  width:100%;
+  appearance:none;
+  -webkit-appearance:none;
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:9px 30px 9px 12px;
+  font-size:13px;font-weight:600;color:var(--ink);
+  cursor:pointer;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.tr-lang-select select:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(197, 181, 213,0.12);}
+.tr-lang-select i{
+  position:absolute;right:11px;
+  font-size:10px;color:var(--ink-faint);
+  pointer-events:none;
+}
+ 
+.tr-tool-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 13px;
+  border-radius:var(--radius-sm);
+  background:var(--bg);
+  border:1px solid var(--border);
+  color:var(--ink-soft);
+  font-size:12.5px;font-weight:600;
+  transition:all .2s ease;
+  white-space:nowrap;
+}
+.tr-tool-btn i{font-size:12px;color:var(--primary);}
+.tr-tool-btn:hover{background:rgba(197, 181, 213,0.08);border-color:rgba(197, 181, 213,0.25);transform:translateY(-1px);}
+.tr-tool-btn.active{background:var(--grad-primary);color:#fff;border-color:transparent;}
+.tr-tool-btn.active i{color:#fff;}
+ 
+/* ---------------- Text areas ---------------- */
+.tr-textarea-wrap{
+  position:relative;
+  flex:1;
+  display:flex;
+  min-height:260px;
+}
+ 
+.tr-textarea-wrap textarea{
+  flex:1;
+  width:100%;
+  resize:none;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  background:var(--bg);
+  padding:16px 44px 16px 16px;
+  font-family:inherit;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--ink);
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.tr-textarea-wrap textarea::placeholder{color:var(--ink-faint);}
+.tr-textarea-wrap textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 4px rgba(197, 181, 213,0.1);}
+ 
+.tr-output{
+  flex:1;
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  background:var(--bg);
+  padding:16px;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--ink);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  text-align:center;
+}
+.tr-output-placeholder{
+  margin:auto;
+  color:var(--ink-faint);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+}
+.tr-output.has-text{
+  justify-content:flex-start;
+  text-align:left;
+  color:var(--ink);
+}
+.tr-output.has-text .tr-output-placeholder{display:none;}
+ 
+.tr-mini-icon-btn{
+  width:30px;height:30px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-faint);
+  background:var(--card);
+  border:1px solid var(--border);
+  font-size:12px;
+  transition:all .2s ease;
+}
+.tr-mini-icon-btn:hover{background:rgba(224,85,75,0.08);color:#E0554B;border-color:rgba(224,85,75,0.25);}
+ 
+.tr-clear-btn{
+  position:absolute;
+  right:10px;bottom:10px;
+}
+ 
+/* ---------------- Panel footer ---------------- */
+.tr-panel-footer{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+.tr-char-count{font-size:11.5px;color:var(--ink-faint);}
+.tr-output-actions{justify-content:flex-start;}
+ 
+/* ---------------- Swap buttons ---------------- */
+.tr-swap-btn{
+  align-self:center;
+  width:42px;height:42px;
+  border-radius:50%;
+  background:var(--grad-primary);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  box-shadow:var(--shadow-md);
+  transition:transform .3s ease, box-shadow .2s ease;
+  flex-shrink:0;
+}
+.tr-swap-btn:hover{transform:rotate(180deg) scale(1.05);box-shadow:var(--shadow-lg);}
+ 
+.tr-swap-btn-inline{
+  display:none;
+  align-items:center;gap:7px;
+  padding:9px 13px;
+  border-radius:var(--radius-sm);
+  background:var(--bg);
+  border:1px solid var(--border);
+  color:var(--ink-soft);
+  font-size:12.5px;font-weight:600;
+}
+.tr-swap-btn-inline i{color:var(--primary);font-size:12px;}
+.tr-swap-btn-inline:hover{background:rgba(197, 181, 213,0.08);}
+ 
+/* ---------------- Translate button ---------------- */
+.tr-translate-btn{
+  width:100%;
+  padding:16px;
+  border-radius:var(--radius-md);
+  background:var(--grad-primary);
+  color:#fff;
+  font-size:15.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 12px 28px rgba(197, 181, 213,0.28);
+  transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.tr-translate-btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(197, 181, 213,0.34);}
+.tr-translate-btn:active{transform:translateY(0);}
+.tr-translate-btn[disabled]{opacity:.75;cursor:progress;}
+ 
+.tr-translate-spinner{
+  display:none;
+  width:16px;height:16px;
+  border-radius:50%;
+  border:2.5px solid rgba(255,255,255,0.4);
+  border-top-color:#fff;
+  animation:tr-spin .7s linear infinite;
+}
+.tr-translate-btn.loading .tr-translate-spinner{display:inline-block;}
+@keyframes tr-spin{to{transform:rotate(360deg);}}
+ 
+/* ---------------- History sidebar ---------------- */
+.tr-side{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.tr-side-card{padding:16px 18px;}
+ 
+.tr-history-list{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.tr-history-item{
+  padding:12px;
+  border-radius:var(--radius-sm);
+  background:rgba(197, 181, 213,0.04);
+  border:1px solid transparent;
+  transition:all .2s ease;
+}
+.tr-history-item:hover{border-color:rgba(197, 181, 213,0.2);transform:translateY(-1px);box-shadow:var(--shadow-sm);}
+ 
+.tr-history-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:6px;
+}
+.tr-lang-pair{font-size:12px;font-weight:700;color:var(--primary);}
+.tr-history-original{font-size:12.5px;color:var(--ink);margin-bottom:2px;}
+.tr-history-translated{font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;}
+.tr-history-time{font-size:10.5px;color:var(--ink-faint);}
+ 
+.tr-copy-item{width:26px;height:26px;font-size:10.5px;background:transparent;border-color:transparent;}
+.tr-copy-item:hover{background:rgba(197, 181, 213,0.1);color:var(--primary);border-color:rgba(197, 181, 213,0.2);}
+ 
+.tr-clear-link{color:#E0554B;}
+.tr-clear-link:hover{text-decoration:underline;}
+ 
+/* ---------------- Responsive ---------------- */
+@media (max-width:1200px){
+  .tr-layout{grid-template-columns:1fr;}
+  .tr-side{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+}
+ 
+@media (max-width:900px){
+  .tr-panels{grid-template-columns:1fr;}
+  .tr-swap-btn{
+    justify-self:center;
+    transform:rotate(90deg);
+  }
+  .tr-swap-btn:hover{transform:rotate(270deg) scale(1.05);}
+  .tr-swap-btn-inline{display:inline-flex;}
+  .tr-side{grid-template-columns:1fr;}
+}
+ 
+@media (max-width:640px){
+  .tr-hero-text h1{font-size:22px;}
+  .tr-controls-row{gap:8px;}
+  .tr-tool-btn span{display:none;}
+  .tr-tool-btn{padding:9px;width:38px;justify-content:center;}
+  .tr-panel-footer.tr-output-actions{justify-content:space-between;}
+  .tr-panel-footer.tr-output-actions .tr-tool-btn{flex:1;}
+}
+ 
