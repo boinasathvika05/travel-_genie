@@ -1,0 +1,439 @@
+{% extends 'mainapp/base_dashboard.html' %}
+{% load static %}
+ 
+{% block title %}Sightseeing{% endblock %}
+ 
+{% block search_placeholder %}Search attractions, tours, experiences…{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainapp/css/sightseeing-style.css' %}?v=1.1">
+{% endblock %}
+ 
+{% block content %}
+<div class="sightseeing-page">
+ 
+  <!-- ======================= HERO ======================= -->
+  <section class="sight-hero fade-in-up">
+    <div class="sight-hero-pattern" style="background-image:url('{% static "mainapp/images/sightseeing/sightseeing-hero.png" %}');"></div>
+    <div class="sight-hero-content">
+      <span class="sight-hero-icon"><i class="fa-solid fa-camera-retro"></i></span>
+      <h1>Sightseeing <span class="hero-emoji">📸</span></h1>
+      <p>Discover famous landmarks, hidden gems and unforgettable experiences around your destination.</p>
+    </div>
+  </section>
+ 
+  <!-- ======================= SEARCH CARD ======================= -->
+  <section class="sight-search-card glass-card fade-in-up">
+    <form class="sight-search-row">
+      <div class="sight-field">
+        <label>Destination</label>
+        <div class="sight-field-control">
+          <i class="fa-solid fa-location-dot"></i>
+          <input type="text" name="destination" value="Paris, France" placeholder="Where to explore?">
+        </div>
+      </div>
+ 
+      <div class="sight-field">
+        <label>Category</label>
+        <div class="sight-field-control">
+          <i class="fa-solid fa-shapes"></i>
+          <select name="category">
+            <option>All Categories</option>
+            <option>Museums</option>
+            <option>Nature</option>
+            <option>Heritage</option>
+            <option>Shopping</option>
+            <option>Food</option>
+            <option>Culture</option>
+            <option>Beaches</option>
+            <option>Parks</option>
+          </select>
+        </div>
+      </div>
+ 
+      <div class="sight-field">
+        <label>Travel Date</label>
+        <div class="sight-field-control">
+          <i class="fa-regular fa-calendar"></i>
+          <input type="text" name="travel_date" value="22 May, 2025" placeholder="Select date">
+        </div>
+      </div>
+ 
+      <div class="sight-field">
+        <label>Duration</label>
+        <div class="sight-field-control">
+          <i class="fa-regular fa-clock"></i>
+          <select name="duration">
+            <option>Half Day</option>
+            <option>Full Day</option>
+            <option>2–3 Hours</option>
+            <option>Multi-day</option>
+          </select>
+        </div>
+      </div>
+ 
+      <button type="submit" class="btn-primary sight-search-btn">
+        <i class="fa-solid fa-magnifying-glass"></i><span>Search Attractions</span>
+      </button>
+    </form>
+ 
+    <!-- CATEGORY CHIPS -->
+    <div class="sight-chip-row">
+      <button type="button" class="sight-chip active" data-category="all">All</button>
+      <button type="button" class="sight-chip" data-category="museums">🏛 Museums</button>
+      <button type="button" class="sight-chip" data-category="nature">🌄 Nature</button>
+      <button type="button" class="sight-chip" data-category="heritage">🏰 Heritage</button>
+      <button type="button" class="sight-chip" data-category="shopping">🛍 Shopping</button>
+      <button type="button" class="sight-chip" data-category="food">🍽 Food</button>
+      <button type="button" class="sight-chip" data-category="culture">🎭 Culture</button>
+      <button type="button" class="sight-chip" data-category="beaches">🏖 Beaches</button>
+      <button type="button" class="sight-chip" data-category="parks">🌳 Parks</button>
+    </div>
+  </section>
+ 
+  <!-- ======================= MAIN GRID (70/30) ======================= -->
+  <div class="sight-main-grid">
+ 
+    <!-- ---------------- LEFT: ATTRACTIONS ---------------- -->
+    <div class="sight-attractions">
+ 
+      <p class="sight-results-count">42 attractions found in Paris, France</p>
+ 
+      <div class="attraction-grid">
+ 
+        <article class="attraction-card fade-in-up" data-category="heritage">
+          <div class="attraction-media">
+            <img src="{% static 'mainapp/images/sightseeing/eiffel.png' %}" alt="Eiffel Tower">
+            <span class="attraction-badge">Heritage</span>
+            <button class="fav-btn" aria-label="Add to favourites"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="attraction-body">
+            <div class="attraction-headline">
+              <h3>Eiffel Tower</h3>
+              <span class="attraction-rating"><i class="fa-solid fa-star"></i>4.8</span>
+            </div>
+            <p class="attraction-location"><i class="fa-solid fa-location-dot"></i>Champ de Mars, Paris</p>
+            <div class="attraction-meta">
+              <span><i class="fa-regular fa-clock"></i>9:00 AM – 11:45 PM</span>
+              <span><i class="fa-regular fa-hourglass"></i>2–3 hrs</span>
+            </div>
+            <p class="attraction-desc">Paris's iconic iron landmark, offering breathtaking views of the city from three observation levels.</p>
+            <div class="attraction-footer">
+              <span class="attraction-fee">$28 <small>entry fee</small></span>
+              <div class="attraction-actions">
+                <a href="https://www.toureiffel.paris/en" target="_blank" rel="noopener" class="btn-outline">View Details</a>
+                <button type="button" class="btn-primary add-trip-btn"><i class="fa-solid fa-plus"></i>Add to Trip</button>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+        <article class="attraction-card fade-in-up" data-category="museums">
+          <div class="attraction-media">
+            <img src="{% static 'mainapp/images/sightseeing/louvre.jpg' %}" alt="The Louvre Museum">
+            <span class="attraction-badge">Museum</span>
+            <button class="fav-btn" aria-label="Add to favourites"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="attraction-body">
+            <div class="attraction-headline">
+              <h3>The Louvre</h3>
+              <span class="attraction-rating"><i class="fa-solid fa-star"></i>4.9</span>
+            </div>
+            <p class="attraction-location"><i class="fa-solid fa-location-dot"></i>Rue de Rivoli, Paris</p>
+            <div class="attraction-meta">
+              <span><i class="fa-regular fa-clock"></i>9:00 AM – 6:00 PM</span>
+              <span><i class="fa-regular fa-hourglass"></i>3–4 hrs</span>
+            </div>
+            <p class="attraction-desc">The world's largest art museum, home to the Mona Lisa and thousands of masterpieces.</p>
+            <div class="attraction-footer">
+              <span class="attraction-fee">$22 <small>entry fee</small></span>
+              <div class="attraction-actions">
+                <a href="https://www.louvre.fr/en" target="_blank" rel="noopener" class="btn-outline">View Details</a>
+                <button type="button" class="btn-primary add-trip-btn"><i class="fa-solid fa-plus"></i>Add to Trip</button>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+        <article class="attraction-card fade-in-up" data-category="culture">
+          <div class="attraction-media">
+            <img src="{% static 'mainapp/images/sightseeing/disneyland.jpg' %}" alt="Disneyland Paris">
+            <span class="attraction-badge">Culture</span>
+            <button class="fav-btn" aria-label="Add to favourites"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="attraction-body">
+            <div class="attraction-headline">
+              <h3>Disneyland Paris</h3>
+              <span class="attraction-rating"><i class="fa-solid fa-star"></i>4.6</span>
+            </div>
+            <p class="attraction-location"><i class="fa-solid fa-location-dot"></i>Marne-la-Vallée, Paris</p>
+            <div class="attraction-meta">
+              <span><i class="fa-regular fa-clock"></i>9:30 AM – 8:00 PM</span>
+              <span><i class="fa-regular fa-hourglass"></i>Full day</span>
+            </div>
+            <p class="attraction-desc">A magical theme park experience with rides, parades and unforgettable family fun.</p>
+            <div class="attraction-footer">
+              <span class="attraction-fee">$65 <small>entry fee</small></span>
+              <div class="attraction-actions">
+                <a href="https://www.disneylandparis.com/en-gb/" target="_blank" rel="noopener" class="btn-outline">View Details</a>
+                <button type="button" class="btn-primary add-trip-btn"><i class="fa-solid fa-plus"></i>Add to Trip</button>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+        <article class="attraction-card fade-in-up" data-category="heritage">
+          <div class="attraction-media">
+            <img src="{% static 'mainapp/images/sightseeing/notre-dame.jpg' %}" alt="Notre-Dame Cathedral">
+            <span class="attraction-badge">Heritage</span>
+            <button class="fav-btn" aria-label="Add to favourites"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="attraction-body">
+            <div class="attraction-headline">
+              <h3>Notre-Dame Cathedral</h3>
+              <span class="attraction-rating"><i class="fa-solid fa-star"></i>4.7</span>
+            </div>
+            <p class="attraction-location"><i class="fa-solid fa-location-dot"></i>Île de la Cité, Paris</p>
+            <div class="attraction-meta">
+              <span><i class="fa-regular fa-clock"></i>8:00 AM – 6:45 PM</span>
+              <span><i class="fa-regular fa-hourglass"></i>1–2 hrs</span>
+            </div>
+            <p class="attraction-desc">A masterpiece of French Gothic architecture, steeped in centuries of history.</p>
+            <div class="attraction-footer">
+              <span class="attraction-fee">Free <small>entry</small></span>
+              <div class="attraction-actions">
+                <a href="https://www.notredamedeparis.fr/en/" target="_blank" rel="noopener" class="btn-outline">View Details</a>
+                <button type="button" class="btn-primary add-trip-btn"><i class="fa-solid fa-plus"></i>Add to Trip</button>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+        <article class="attraction-card fade-in-up" data-category="nature">
+          <div class="attraction-media">
+            <img src="{% static 'mainapp/images/sightseeing/river-cruise.jpg' %}" alt="Seine River Cruise">
+            <span class="attraction-badge">Nature</span>
+            <button class="fav-btn" aria-label="Add to favourites"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="attraction-body">
+            <div class="attraction-headline">
+              <h3>Seine River Cruise</h3>
+              <span class="attraction-rating"><i class="fa-solid fa-star"></i>4.7</span>
+            </div>
+            <p class="attraction-location"><i class="fa-solid fa-location-dot"></i>Port de la Bourdonnais, Paris</p>
+            <div class="attraction-meta">
+              <span><i class="fa-regular fa-clock"></i>10:00 AM – 10:00 PM</span>
+              <span><i class="fa-regular fa-hourglass"></i>1 hr</span>
+            </div>
+            <p class="attraction-desc">Glide past Paris's most famous landmarks on a relaxing scenic river cruise.</p>
+            <div class="attraction-footer">
+              <span class="attraction-fee">$18 <small>entry fee</small></span>
+              <div class="attraction-actions">
+                <a href="https://www.bateauxparisiens.com/en/" target="_blank" rel="noopener" class="btn-outline">View Details</a>
+                <button type="button" class="btn-primary add-trip-btn"><i class="fa-solid fa-plus"></i>Add to Trip</button>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+        <article class="attraction-card fade-in-up" data-category="shopping">
+          <div class="attraction-media">
+            <img src="{% static 'mainapp/images/sightseeing/montmartre.jpg' %}" alt="Montmartre">
+            <span class="attraction-badge">Shopping</span>
+            <button class="fav-btn" aria-label="Add to favourites"><i class="fa-regular fa-heart"></i></button>
+          </div>
+          <div class="attraction-body">
+            <div class="attraction-headline">
+              <h3>Montmartre &amp; Sacré-Cœur</h3>
+              <span class="attraction-rating"><i class="fa-solid fa-star"></i>4.8</span>
+            </div>
+            <p class="attraction-location"><i class="fa-solid fa-location-dot"></i>Montmartre, Paris</p>
+            <div class="attraction-meta">
+              <span><i class="fa-regular fa-clock"></i>6:00 AM – 10:30 PM</span>
+              <span><i class="fa-regular fa-hourglass"></i>2–3 hrs</span>
+            </div>
+            <p class="attraction-desc">Wander cobblestone streets, artist squares and boutique shops beneath the basilica.</p>
+            <div class="attraction-footer">
+              <span class="attraction-fee">Free <small>entry</small></span>
+              <div class="attraction-actions">
+                <a href="https://www.sacre-coeur-montmartre.com/english/" target="_blank" rel="noopener" class="btn-outline">View Details</a>
+                <button type="button" class="btn-primary add-trip-btn"><i class="fa-solid fa-plus"></i>Add to Trip</button>
+              </div>
+            </div>
+          </div>
+        </article>
+ 
+      </div>
+    </div>
+ 
+    <!-- ---------------- RIGHT: SIDEBAR ---------------- -->
+    <aside class="sight-sidebar">
+ 
+      <div class="side-card plan-card">
+        <h4>Today's Plan</h4>
+        <ul class="timeline">
+          <li>
+            <span class="timeline-dot"></span>
+            <span class="timeline-time">09:00</span>
+            <span class="timeline-label">Eiffel Tower</span>
+          </li>
+          <li>
+            <span class="timeline-dot"></span>
+            <span class="timeline-time">11:00</span>
+            <span class="timeline-label">Seine River Cruise</span>
+          </li>
+          <li>
+            <span class="timeline-dot"></span>
+            <span class="timeline-time">13:00</span>
+            <span class="timeline-label">Lunch</span>
+          </li>
+          <li>
+            <span class="timeline-dot"></span>
+            <span class="timeline-time">15:00</span>
+            <span class="timeline-label">Louvre</span>
+          </li>
+          <li>
+            <span class="timeline-dot"></span>
+            <span class="timeline-time">18:00</span>
+            <span class="timeline-label">Shopping</span>
+          </li>
+        </ul>
+      </div>
+ 
+      <div class="side-card recommend-card">
+        <h4>Recommended For You</h4>
+        <div class="recommend-tabs">
+          <button type="button" class="rec-tab active" data-tab="top-rated">Top Rated</button>
+          <button type="button" class="rec-tab" data-tab="hidden-gems">Hidden Gems</button>
+          <button type="button" class="rec-tab" data-tab="nearby">Nearby</button>
+        </div>
+ 
+        <ul class="recommend-list" data-panel="top-rated">
+          <li><i class="fa-solid fa-star"></i><span>The Louvre</span><small>4.9</small></li>
+          <li><i class="fa-solid fa-star"></i><span>Eiffel Tower</span><small>4.8</small></li>
+          <li><i class="fa-solid fa-star"></i><span>Montmartre</span><small>4.8</small></li>
+        </ul>
+        <ul class="recommend-list" data-panel="hidden-gems" hidden>
+          <li><i class="fa-solid fa-gem"></i><span>Musée de l'Orangerie</span><small>4.7</small></li>
+          <li><i class="fa-solid fa-gem"></i><span>Canal Saint-Martin</span><small>4.6</small></li>
+          <li><i class="fa-solid fa-gem"></i><span>Passage des Panoramas</span><small>4.5</small></li>
+        </ul>
+        <ul class="recommend-list" data-panel="nearby" hidden>
+          <li><i class="fa-solid fa-location-dot"></i><span>Notre-Dame Cathedral</span><small>0.8 km</small></li>
+          <li><i class="fa-solid fa-location-dot"></i><span>Sainte-Chapelle</span><small>1.1 km</small></li>
+          <li><i class="fa-solid fa-location-dot"></i><span>Île Saint-Louis</span><small>1.4 km</small></li>
+        </ul>
+      </div>
+ 
+      <div class="side-card sight-summary-card">
+        <h4>Sightseeing Summary</h4>
+        <div class="summary-stat-row">
+          <i class="fa-solid fa-map-pin"></i>
+          <span>Places Selected</span>
+          <strong>4</strong>
+        </div>
+        <div class="summary-stat-row">
+          <i class="fa-solid fa-person-walking"></i>
+          <span>Walking Distance</span>
+          <strong>6.2 km</strong>
+        </div>
+        <div class="summary-stat-row">
+          <i class="fa-solid fa-sack-dollar"></i>
+          <span>Estimated Cost</span>
+          <strong>$133</strong>
+        </div>
+        <div class="summary-stat-row">
+          <i class="fa-regular fa-clock"></i>
+          <span>Time Required</span>
+          <strong>~9 hrs</strong>
+        </div>
+        <button type="button" class="btn-primary summary-cta">View Itinerary</button>
+      </div>
+ 
+    </aside>
+  </div>
+ 
+  <!-- ======================= RECOMMENDED EXPERIENCES ======================= -->
+  <section class="sight-experiences fade-in-up">
+    <div class="section-head">
+      <h3><i class="fa-solid fa-sparkles"></i>Recommended Experiences</h3>
+      <a href="https://www.getyourguide.com/paris-l16/" target="_blank" rel="noopener" class="card-link">View all</a>
+    </div>
+ 
+    <div class="experience-scroll">
+ 
+      <a href="https://www.getyourguide.com/paris-l16/paris-food-tour-t388432/" target="_blank" rel="noopener" class="experience-card">
+        <img src="{% static 'mainapp/images/sightseeing/food-tour.png' %}" alt="Paris Food Tour">
+        <div class="experience-overlay">
+          <h4>Paris Food Tour</h4>
+          <div class="experience-meta">
+            <span class="experience-price">$59</span>
+            <span class="experience-rating"><i class="fa-solid fa-star"></i>4.8</span>
+          </div>
+        </div>
+      </a>
+ 
+      <a href="https://www.getyourguide.com/paris-l16/paris-wine-tasting-t13551/" target="_blank" rel="noopener" class="experience-card">
+        <img src="{% static 'mainapp/images/sightseeing/wine-tasting.png' %}" alt="Wine Tasting Experience">
+        <div class="experience-overlay">
+          <h4>Wine Tasting Experience</h4>
+          <div class="experience-meta">
+            <span class="experience-price">$74</span>
+            <span class="experience-rating"><i class="fa-solid fa-star"></i>4.9</span>
+          </div>
+        </div>
+      </a>
+ 
+      <a href="https://www.getyourguide.com/paris-l16/paris-montmartre-walking-tour-t386521/" target="_blank" rel="noopener" class="experience-card">
+        <img src="{% static 'mainapp/images/sightseeing/photo-walk.jpg' %}" alt="Golden Hour Photo Walk">
+        <div class="experience-overlay">
+          <h4>Golden Hour Photo Walk</h4>
+          <div class="experience-meta">
+            <span class="experience-price">$45</span>
+            <span class="experience-rating"><i class="fa-solid fa-star"></i>4.7</span>
+          </div>
+        </div>
+      </a>
+ 
+      <a href="https://www.getyourguide.com/paris-l16/paris-seine-river-cruise-t53597/" target="_blank" rel="noopener" class="experience-card">
+        <img src="{% static 'mainapp/images/sightseeing/boat-cruise.png' %}" alt="Sunset Boat Cruise">
+        <div class="experience-overlay">
+          <h4>Sunset Boat Cruise</h4>
+          <div class="experience-meta">
+            <span class="experience-price">$38</span>
+            <span class="experience-rating"><i class="fa-solid fa-star"></i>4.6</span>
+          </div>
+        </div>
+      </a>
+ 
+      <a href="https://www.getyourguide.com/paris-l16/paris-illuminations-night-tour-t60566/" target="_blank" rel="noopener" class="experience-card">
+        <img src="{% static 'mainapp/images/sightseeing/night-tour.png' %}" alt="Illuminated Night Tour">
+        <div class="experience-overlay">
+          <h4>Illuminated Night Tour</h4>
+          <div class="experience-meta">
+            <span class="experience-price">$52</span>
+            <span class="experience-rating"><i class="fa-solid fa-star"></i>4.8</span>
+          </div>
+        </div>
+      </a>
+ 
+      <a href="https://www.getyourguide.com/paris-l16/paris-helicopter-tour-t75073/" target="_blank" rel="noopener" class="experience-card">
+        <img src="{% static 'mainapp/images/sightseeing/helicopter.png' %}" alt="Helicopter City Tour">
+        <div class="experience-overlay">
+          <h4>Helicopter City Tour</h4>
+          <div class="experience-meta">
+            <span class="experience-price">$249</span>
+            <span class="experience-rating"><i class="fa-solid fa-star"></i>5.0</span>
+          </div>
+        </div>
+      </a>
+ 
+    </div>
+  </section>
+ 
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'mainapp/js/sightseeing-script.js' %}?v=1.1" defer></script>
+{% endblock %}

@@ -1,0 +1,759 @@
+/* ==========================================================================
+   TravelGenie — Sightseeing page
+   Reuses design tokens (--primary, --secondary, --bg, --card, --ink,
+   --border, --shadow-*, --radius-*, --font-*) defined in dashboard-style.css.
+   Does NOT redefine .app-shell / .sidebar / .topbar / .search-bar / etc. —
+   those remain owned exclusively by dashboard-style.css.
+   ========================================================================== */
+ 
+.sightseeing-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+ 
+/* ---------------------------------------------------------
+   HERO
+   --------------------------------------------------------- */
+.sight-hero {
+  position: relative;
+  min-height: 240px;
+  border-radius: var(--radius-lg);
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+ 
+.sight-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sight-hero-pattern {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 1;
+  pointer-events: none;
+  z-index: 0;
+}
+ 
+.sight-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 560px;
+}
+ 
+.sight-hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 16px;
+  border: 1px solid rgba(255,255,255,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.sight-hero-icon:hover {
+  background: rgba(255, 255, 255, 0.35);
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+ 
+.sight-hero-content h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  color: #fff;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+ 
+.hero-emoji { font-size: 24px; }
+ 
+.sight-hero-content p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+ 
+/* ---------------------------------------------------------
+   SEARCH CARD
+   --------------------------------------------------------- */
+.glass-card {
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+ 
+.sight-search-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-md);
+  padding: 20px 22px;
+}
+ 
+.sight-search-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+ 
+.sight-field {
+  flex: 1 1 170px;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+ 
+.sight-field label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+ 
+.sight-field-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 13px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+ 
+.sight-field-control:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(197, 181, 213, 0.12);
+}
+ 
+.sight-field-control i { color: var(--primary); font-size: 13px; }
+ 
+.sight-field-control input,
+.sight-field-control select {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink);
+  width: 100%;
+}
+ 
+.sight-field-control input::placeholder { color: var(--ink-faint); }
+ 
+.btn-primary {
+  background: var(--grad-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 11px 20px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 6px 16px rgba(197, 181, 213, 0.28);
+}
+ 
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow: 0 10px 22px rgba(197, 181, 213, 0.36);
+}
+ 
+.btn-primary:active::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  animation: sightRipple 0.5s ease-out;
+}
+ 
+.sight-search-btn { flex: 0 0 auto; }
+ 
+.btn-outline {
+  background: #fff;
+  border: 1.4px solid var(--primary);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+ 
+.btn-outline:hover {
+  background: var(--grad-primary);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+ 
+/* Category chips */
+.sight-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+ 
+.sight-chip {
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+ 
+.sight-chip:hover {
+  background: rgba(197, 181, 213, 0.1);
+  color: var(--primary);
+  border-color: rgba(197, 181, 213, 0.3);
+  transform: translateY(-1px);
+}
+ 
+.sight-chip.active {
+  background: var(--grad-primary);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 6px 14px rgba(197, 181, 213, 0.28);
+}
+ 
+/* ---------------------------------------------------------
+   MAIN GRID — 70/30
+   --------------------------------------------------------- */
+.sight-main-grid {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 22px;
+  align-items: start;
+}
+ 
+.sight-results-count {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+ 
+/* ---------------------------------------------------------
+   ATTRACTION CARDS
+   --------------------------------------------------------- */
+.attraction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+ 
+.attraction-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+ 
+.attraction-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+ 
+.attraction-media {
+  position: relative;
+  height: 170px;
+  overflow: hidden;
+}
+ 
+.attraction-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s ease;
+}
+ 
+.attraction-card:hover .attraction-media img {
+  transform: scale(1.08);
+}
+ 
+.attraction-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(21, 42, 74, 0.72);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 999px;
+  backdrop-filter: blur(4px);
+}
+ 
+.fav-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+ 
+.fav-btn:hover { color: #E0554B; transform: scale(1.08); }
+.fav-btn.active i { font-weight: 900; color: #E0554B; }
+ 
+.attraction-body {
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+ 
+.attraction-headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+ 
+.attraction-headline h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+}
+ 
+.attraction-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #F5A623;
+  flex-shrink: 0;
+}
+ 
+.attraction-location {
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+ 
+.attraction-location i { color: var(--primary); font-size: 11px; }
+ 
+.attraction-meta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+ 
+.attraction-meta i { color: var(--primary); margin-right: 4px; }
+ 
+.attraction-desc {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  flex: 1;
+}
+ 
+.attraction-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+ 
+.attraction-fee {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+ 
+.attraction-fee small {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  margin-left: 3px;
+}
+ 
+.attraction-actions {
+  display: flex;
+  gap: 8px;
+}
+ 
+.add-trip-btn { padding: 9px 14px; font-size: 12px; }
+.add-trip-btn i { font-size: 10px; }
+ 
+/* ---------------------------------------------------------
+   SIDEBAR
+   --------------------------------------------------------- */
+.sight-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 18px;
+}
+ 
+.side-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+  transition: box-shadow 0.25s ease;
+}
+ 
+.side-card:hover { box-shadow: var(--shadow-md); }
+ 
+.side-card h4 {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+ 
+/* Today's plan timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  padding-left: 6px;
+}
+ 
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 15px;
+  top: 6px;
+  bottom: 6px;
+  width: 1.5px;
+  background: var(--border);
+}
+ 
+.timeline li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+ 
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--grad-primary);
+  flex-shrink: 0;
+  margin-left: 6px;
+  box-shadow: 0 0 0 3px rgba(197, 181, 213, 0.14);
+  z-index: 1;
+}
+ 
+.timeline-time {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--primary);
+  min-width: 40px;
+}
+ 
+.timeline-label {
+  font-size: 12.5px;
+  color: var(--ink);
+  font-weight: 500;
+}
+ 
+/* Recommended tabs */
+.recommend-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+ 
+.rec-tab {
+  flex: 1;
+  padding: 7px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+ 
+.rec-tab:hover { color: var(--primary); }
+ 
+.rec-tab.active {
+  background: var(--grad-primary);
+  color: #fff;
+  border-color: transparent;
+}
+ 
+.recommend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+ 
+.recommend-list[hidden] {
+  display: none !important;
+}
+ 
+.recommend-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--ink);
+}
+ 
+.recommend-list li i { color: #F5A623; font-size: 11px; width: 14px; }
+.recommend-list li span { flex: 1; }
+.recommend-list li small { color: var(--ink-faint); font-weight: 600; font-size: 11px; }
+ 
+/* Sightseeing summary */
+.summary-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+ 
+.summary-stat-row i { color: var(--primary); width: 15px; }
+.summary-stat-row span { flex: 1; }
+.summary-stat-row strong { color: var(--ink); font-size: 13px; }
+ 
+.summary-cta {
+  width: 100%;
+  margin-top: 8px;
+}
+ 
+/* ---------------------------------------------------------
+   RECOMMENDED EXPERIENCES (horizontal scroll)
+   --------------------------------------------------------- */
+.sight-experiences {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+}
+ 
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+ 
+.section-head h3 {
+  font-size: 14.5px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+ 
+.section-head h3 i { color: var(--primary); font-size: 13px; }
+ 
+.experience-scroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 6px;
+}
+ 
+.experience-scroll::-webkit-scrollbar { height: 6px; }
+.experience-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+ 
+.experience-card {
+  display: block;
+  position: relative;
+  flex: 0 0 240px;
+  height: 200px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  scroll-snap-align: start;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--shadow-sm);
+}
+ 
+.experience-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+ 
+.experience-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+ 
+.experience-card:hover img { transform: scale(1.08); }
+ 
+.experience-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(10, 20, 40, 0.82) 0%, rgba(10, 20, 40, 0.15) 55%, rgba(10, 20, 40, 0) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px;
+  color: #fff;
+}
+ 
+.experience-overlay h4 {
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+ 
+.experience-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+}
+ 
+.experience-price { font-weight: 700; }
+ 
+.experience-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #F5A623;
+  font-weight: 600;
+}
+ 
+/* ---------------------------------------------------------
+   ANIMATIONS
+   --------------------------------------------------------- */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: sightFadeInUp 0.6s ease forwards;
+}
+ 
+.sight-hero { animation-delay: 0.03s; }
+.sight-search-card { animation-delay: 0.09s; }
+.attraction-card:nth-child(1) { animation-delay: 0.05s; }
+.attraction-card:nth-child(2) { animation-delay: 0.1s; }
+.attraction-card:nth-child(3) { animation-delay: 0.15s; }
+.attraction-card:nth-child(4) { animation-delay: 0.2s; }
+.attraction-card:nth-child(5) { animation-delay: 0.25s; }
+.attraction-card:nth-child(6) { animation-delay: 0.3s; }
+.sight-experiences { animation-delay: 0.15s; }
+ 
+@keyframes sightFadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+ 
+@keyframes sightRipple {
+  from { opacity: 1; transform: scale(0); }
+  to { opacity: 0; transform: scale(2.4); }
+}
+ 
+/* ---------------------------------------------------------
+   RESPONSIVE
+   --------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .attraction-grid { grid-template-columns: 1fr; }
+}
+ 
+@media (max-width: 1024px) {
+  .sight-main-grid { grid-template-columns: 1fr; }
+  .sight-sidebar { position: static; flex-direction: row; flex-wrap: wrap; }
+  .sight-sidebar .side-card { flex: 1 1 260px; }
+}
+ 
+@media (max-width: 640px) {
+  .sight-hero { padding: 22px 16px; min-height: 150px; }
+  .sight-hero-content h1 { font-size: 21px; }
+ 
+  .sight-field { flex: 1 1 100%; }
+  .sight-search-btn { width: 100%; }
+ 
+  .attraction-footer { flex-direction: column; align-items: flex-start; }
+  .attraction-actions { width: 100%; }
+  .attraction-actions .btn-outline,
+  .attraction-actions .add-trip-btn { flex: 1; justify-content: center; }
+ 
+  .sight-sidebar { flex-direction: column; }
+  .experience-card { flex: 0 0 200px; height: 170px; }
+}
+ 
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up, .attraction-card, .experience-card, .btn-primary, .btn-outline, .sight-chip, .fav-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+ 

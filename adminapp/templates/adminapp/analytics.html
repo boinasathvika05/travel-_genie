@@ -1,0 +1,236 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{% block title %}Analytics{% endblock %}
+{% block page_id %}analytics{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminapp/css/analytics.css' %}?v=1.1">
+{% endblock %}
+ 
+{% block content %}
+<div class="analytics-page">
+ 
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================= -->
+  <div class="page-header">
+    <div class="page-header-text">
+      <h1 class="page-title">Analytics</h1>
+      <p class="page-subtitle">Monitor platform performance and business insights.</p>
+    </div>
+    <button type="button" class="btn btn-primary btn-ripple" id="exportAnalyticsBtn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v13"/><path d="M7 11l5 5 5-5"/><path d="M4 21h16"/></svg>
+      Export Analytics
+    </button>
+  </div>
+ 
+  <!-- ============================================================
+       SUMMARY CARDS
+  ============================================================= -->
+  <div class="summary-grid">
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-blue"></div>
+      <div class="summary-icon icon-blue">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Total Visitors</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-green"></div>
+      <div class="summary-icon icon-green">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Total Bookings</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-amber"></div>
+      <div class="summary-icon icon-amber">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Revenue</span>
+        <span class="summary-value">$0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-purple"></div>
+      <div class="summary-icon icon-purple">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Active Users</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       FILTER SECTION
+  ============================================================= -->
+  <div class="card filter-card reveal">
+    <div class="filter-row">
+ 
+      <div class="filter-select-wrap">
+        <select id="dateRangeFilter" class="filter-select">
+          <option value="">Date Range</option>
+          <option value="today">Today</option>
+          <option value="7days">Last 7 Days</option>
+          <option value="30days">Last 30 Days</option>
+          <option value="quarter">This Quarter</option>
+          <option value="year">This Year</option>
+        </select>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="chartTypeFilter" class="filter-select">
+          <option value="">Chart Type</option>
+          <option value="line">Line Chart</option>
+          <option value="bar">Bar Chart</option>
+          <option value="area">Area Chart</option>
+          <option value="pie">Pie Chart</option>
+        </select>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="metricFilter" class="filter-select">
+          <option value="">Metric</option>
+          <option value="visitors">Visitors</option>
+          <option value="bookings">Bookings</option>
+          <option value="revenue">Revenue</option>
+          <option value="users">Users</option>
+        </select>
+      </div>
+ 
+      <div class="filter-actions">
+        <button type="button" class="btn btn-primary btn-ripple" id="applyFiltersBtn">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+          Apply Filters
+        </button>
+        <button type="button" class="btn btn-ghost" id="resetFiltersBtn">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          Reset
+        </button>
+      </div>
+ 
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       ANALYTICS CHART CARDS
+  ============================================================= -->
+  <div class="charts-grid">
+ 
+    <div class="card chart-card reveal">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">Booking Trends</h3>
+      </div>
+      <div class="chart-container">
+        <svg class="chart-illustration" viewBox="0 0 220 120" fill="none">
+          <path d="M10 100h200" stroke="var(--line)" stroke-width="2"/>
+          <path d="M10 20v80" stroke="var(--line)" stroke-width="2"/>
+          <path d="M20 90c20-6 34 8 54 2s34-20 54-14 34 10 54 4" stroke="var(--blue)" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="184" cy="82" r="4" fill="var(--blue)"/>
+        </svg>
+      </div>
+    </div>
+ 
+    <div class="card chart-card reveal">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">Revenue Overview</h3>
+      </div>
+      <div class="chart-container">
+        <svg class="chart-illustration" viewBox="0 0 220 120" fill="none">
+          <path d="M10 100h200" stroke="var(--line)" stroke-width="2"/>
+          <path d="M10 20v80" stroke="var(--line)" stroke-width="2"/>
+          <rect x="26" y="70" width="18" height="30" rx="3" fill="var(--blue)"/>
+          <rect x="58" y="54" width="18" height="46" rx="3" fill="#10B981"/>
+          <rect x="90" y="66" width="18" height="34" rx="3" fill="var(--blue)"/>
+          <rect x="122" y="42" width="18" height="58" rx="3" fill="#10B981"/>
+          <rect x="154" y="60" width="18" height="40" rx="3" fill="var(--blue)"/>
+        </svg>
+      </div>
+    </div>
+ 
+    <div class="card chart-card reveal">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">User Growth</h3>
+      </div>
+      <div class="chart-container">
+        <svg class="chart-illustration" viewBox="0 0 220 120" fill="none">
+          <path d="M10 100h200" stroke="var(--line)" stroke-width="2"/>
+          <path d="M10 20v80" stroke="var(--line)" stroke-width="2"/>
+          <path d="M20 96C60 92 90 76 130 58s54-24 70-30" stroke="#8B5CF6" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="200" cy="28" r="4" fill="#8B5CF6"/>
+        </svg>
+      </div>
+    </div>
+ 
+    <div class="card chart-card reveal">
+      <div class="chart-card-header">
+        <h3 class="chart-card-title">Destination Popularity</h3>
+      </div>
+      <div class="chart-container">
+        <svg class="chart-illustration" viewBox="0 0 220 120" fill="none">
+          <circle cx="60" cy="60" r="44" fill="none" stroke="var(--line)" stroke-width="16"/>
+          <path d="M60 16a44 44 0 010 88" stroke="#F59E0B" stroke-width="16" stroke-linecap="round" fill="none" stroke-dasharray="180 300"/>
+          <rect x="128" y="30" width="80" height="10" rx="5" fill="var(--ink)"/>
+          <rect x="128" y="52" width="60" height="10" rx="5" fill="var(--ink-soft)"/>
+          <rect x="128" y="74" width="70" height="10" rx="5" fill="var(--ink-faint)"/>
+        </svg>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       INSIGHTS PANEL
+  ============================================================= -->
+  <div class="card insights-card reveal">
+    <div class="insights-header">
+      <div class="insights-icon">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 00-4 12.74c.53.42.86 1.05.86 1.72V17h6.28v-.54c0-.67.33-1.3.86-1.72A7 7 0 0012 2z"/></svg>
+      </div>
+      <h3 class="insights-title">Insights</h3>
+    </div>
+    <div class="insights-container">
+      <div class="insight-item">
+        <span class="insight-bullet" style="background:#10B981"></span>
+        <p class="insight-text"><strong>Revenue is up 24%</strong> compared to the previous period.</p>
+      </div>
+      <div class="insight-item">
+        <span class="insight-bullet" style="background:var(--blue)"></span>
+        <p class="insight-text"><strong>Paris</strong> is the most booked destination this month.</p>
+      </div>
+      <div class="insight-item">
+        <span class="insight-bullet" style="background:#8B5CF6"></span>
+        <p class="insight-text"><strong>Mobile users</strong> have increased by 15%.</p>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       BOTTOM RECORD COUNT
+  ============================================================= -->
+  <div class="records-row reveal">
+    <span class="records-info">Showing analytics for <strong>0 records</strong></span>
+  </div>
+ 
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'adminapp/js/analytics.js' %}"></script>
+{% endblock %}
+ 

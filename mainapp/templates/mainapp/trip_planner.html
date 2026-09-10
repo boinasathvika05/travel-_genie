@@ -1,0 +1,207 @@
+{% extends 'mainapp/base_dashboard.html' %}
+{% load static %}
+ 
+{% block title %}Trip Planner — TravelGenie{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainapp/css/trip-planner.css' %}">
+{% endblock %}
+ 
+{% block search_placeholder %}Search destinations, hotels, interests…{% endblock %}
+ 
+{% block content %}
+ 
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+      <div class="header-bg" aria-hidden="true" style="background-image:url('{% static "mainapp/images/planner/trip-planner-hero.png" %}');">
+      </div>
+ 
+      <h1>Trip Planner <i class="fa-solid fa-plane-departure header-icon"></i></h1>
+      <p>Plan your perfect trip with the power of AI</p>
+    </section>
+ 
+    <!-- MAIN GRID -->
+    <section class="planner-grid fade-in-up">
+ 
+      <!-- ======================= LEFT: FORM ======================= -->
+      <div class="planner-card form-card">
+        <form id="tripForm">
+ 
+          <!-- From / To -->
+          <div class="route-row">
+            <div class="field">
+              <label for="fromInput">From</label>
+              <div class="field-control">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" id="fromInput" name="from" placeholder="e.g., New York, USA">
+              </div>
+            </div>
+ 
+            <button type="button" class="swap-btn" id="swapBtn" aria-label="Swap locations">
+              <i class="fa-solid fa-right-left"></i>
+            </button>
+ 
+            <div class="field">
+              <label for="toInput">To</label>
+              <div class="field-control">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" id="toInput" name="to" placeholder="e.g., Paris, France">
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Dates -->
+          <div class="two-col">
+            <div class="field">
+              <label for="departureDate">Departure</label>
+              <div class="field-control">
+                <i class="fa-regular fa-calendar"></i>
+                <input type="date" id="departureDate" name="departure_date">
+              </div>
+            </div>
+            <div class="field">
+              <label for="returnDate">Return</label>
+              <div class="field-control">
+                <i class="fa-regular fa-calendar"></i>
+                <input type="date" id="returnDate" name="return_date">
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Travelers + Budget -->
+          <div class="two-col">
+            <div class="field">
+              <label>Travelers</label>
+              <div class="traveler-control">
+                <button type="button" class="stepper-btn" id="decreaseTravelers" aria-label="Decrease travelers">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="traveler-count" id="travelerCount">2</span>
+                <button type="button" class="stepper-btn" id="increaseTravelers" aria-label="Increase travelers">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+                <input type="hidden" name="travelers" id="travelersInput" value="2">
+              </div>
+              <span class="field-hint">Adults</span>
+            </div>
+ 
+            <div class="field">
+              <label>Budget Range</label>
+              <div class="budget-control">
+                <span class="budget-min">$500</span>
+                <input type="range" id="budgetRange" name="budget" min="500" max="5000" step="100" value="2000">
+                <span class="budget-max">$5000+</span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- Travel style -->
+          <div class="field">
+            <label><i class="fa-solid fa-suitcase"></i> Travel Style</label>
+            <div class="pill-row" id="travelStyleRow">
+              <button type="button" class="pill-btn" data-value="luxury"><i class="fa-solid fa-gem"></i> Luxury</button>
+              <button type="button" class="pill-btn" data-value="budget"><i class="fa-solid fa-wallet"></i> Budget</button>
+              <button type="button" class="pill-btn" data-value="family"><i class="fa-solid fa-people-roof"></i> Family</button>
+              <button type="button" class="pill-btn" data-value="adventure"><i class="fa-solid fa-mountain"></i> Adventure</button>
+              <button type="button" class="pill-btn" data-value="solo"><i class="fa-regular fa-user"></i> Solo</button>
+              <button type="button" class="pill-btn" data-value="business"><i class="fa-solid fa-briefcase"></i> Business</button>
+            </div>
+            <input type="hidden" name="travel_style" id="travelStyleInput" value="">
+          </div>
+ 
+          <!-- Interests -->
+          <div class="field">
+            <label><i class="fa-regular fa-heart"></i> Interests</label>
+            <div class="chip-row" id="interestsRow">
+              <button type="button" class="interest-chip" data-value="beaches"><i class="fa-solid fa-umbrella-beach"></i> Beaches</button>
+              <button type="button" class="interest-chip" data-value="mountains"><i class="fa-solid fa-mountain-sun"></i> Mountains</button>
+              <button type="button" class="interest-chip" data-value="food"><i class="fa-solid fa-utensils"></i> Food</button>
+              <button type="button" class="interest-chip" data-value="museums"><i class="fa-solid fa-landmark"></i> Museums</button>
+              <button type="button" class="interest-chip" data-value="shopping"><i class="fa-solid fa-bag-shopping"></i> Shopping</button>
+              <button type="button" class="interest-chip" data-value="nightlife"><i class="fa-solid fa-martini-glass"></i> Nightlife</button>
+              <button type="button" class="interest-chip" data-value="wildlife"><i class="fa-solid fa-paw"></i> Wildlife</button>
+              <button type="button" class="interest-chip" data-value="culture"><i class="fa-solid fa-masks-theater"></i> Culture</button>
+            </div>
+            <input type="hidden" name="interests" id="interestsInput" value="">
+          </div>
+ 
+          <!-- Prompt box -->
+          <div class="field">
+            <label for="aiPrompt"><i class="fa-solid fa-wand-magic-sparkles"></i> Tell TravelGenie what you want</label>
+            <textarea id="aiPrompt" name="prompt" rows="3" placeholder="Example: I want a 5-day romantic trip to Switzerland under $2000 with mountain views and amazing food."></textarea>
+          </div>
+ 
+          <!-- CTA -->
+          <button type="submit" class="generate-btn" id="generateBtn">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Generate AI Itinerary</span>
+          </button>
+        </form>
+      </div>
+ 
+      <!-- ======================= RIGHT: PREVIEW ======================= -->
+      <aside class="planner-card preview-card">
+        <h3><i class="fa-solid fa-sparkles"></i> AI Trip Preview</h3>
+ 
+        <div class="preview-art" aria-hidden="true">
+          <svg viewBox="0 0 220 150" width="100%" height="100%">
+            <defs>
+              <linearGradient id="suitcaseGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#2F80ED"/><stop offset="1" stop-color="#56CCF2"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="110" cy="128" rx="86" ry="10" fill="#2F80ED" opacity="0.06"/>
+            <rect x="60" y="52" width="70" height="66" rx="10" fill="url(#suitcaseGrad)"/>
+            <rect x="82" y="40" width="26" height="16" rx="6" fill="none" stroke="#2F80ED" stroke-width="4"/>
+            <rect x="60" y="80" width="70" height="8" fill="#fff" opacity="0.25"/>
+            <rect x="140" y="66" width="46" height="34" rx="6" fill="#fff" stroke="#DCEBFF" stroke-width="2"/>
+            <path d="M148 92 160 76l8 8 12-14" stroke="#56CCF2" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="176" cy="62" r="12" fill="#E0554B"/>
+            <path d="M176 56v8M170 62h12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            <rect x="30" y="98" width="26" height="20" rx="5" fill="#00C48C" opacity="0.85"/>
+            <path d="M40 98c0-8 6-12 6-12s6 4 6 12" fill="none" stroke="#00C48C" stroke-width="3"/>
+          </svg>
+        </div>
+ 
+        <div id="previewEmpty">
+          <p class="preview-desc">Once you generate your itinerary, your AI-powered travel plan will appear here with:</p>
+   
+          <ul class="preview-features">
+            <li>
+              <span class="feature-icon"><i class="fa-regular fa-calendar-days"></i></span>
+              <div><strong>Day-wise Itinerary</strong><small>A detailed day-by-day plan</small></div>
+            </li>
+            <li>
+              <span class="feature-icon"><i class="fa-solid fa-star"></i></span>
+              <div><strong>Top Attractions</strong><small>Must-visit places &amp; experiences</small></div>
+            </li>
+            <li>
+              <span class="feature-icon"><i class="fa-solid fa-bed"></i></span>
+              <div><strong>Hotel Recommendations</strong><small>Best stays for your budget</small></div>
+            </li>
+            <li>
+              <span class="feature-icon"><i class="fa-regular fa-lightbulb"></i></span>
+              <div><strong>Travel Tips</strong><small>Smart tips for a smooth journey</small></div>
+            </li>
+            <li>
+              <span class="feature-icon"><i class="fa-solid fa-sack-dollar"></i></span>
+              <div><strong>Estimated Budget</strong><small>Breakdown of your trip cost</small></div>
+            </li>
+          </ul>
+   
+          <div class="preview-note">
+            Fill the form and click "Generate AI Itinerary" to get started <i class="fa-solid fa-plane"></i>
+          </div>
+        </div>
+ 
+        <!-- Results render here once the AI response comes back -->
+        <div class="itinerary-result" id="itineraryResult" hidden></div>
+      </aside>
+ 
+    </section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'mainapp/js/trip-planner.js' %}?v=1.1" defer></script>
+{% endblock %}

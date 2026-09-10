@@ -1,0 +1,208 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{% block title %}Contacts{% endblock %}
+{% block page_id %}contacts{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminapp/css/contacts.css' %}">
+{% endblock %}
+ 
+{% block content %}
+<div class="contacts-page">
+ 
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================= -->
+  <div class="page-header">
+    <div class="page-header-text">
+      <h1 class="page-title">Contacts</h1>
+      <p class="page-subtitle">Manage messages and enquiries received from users.</p>
+    </div>
+    <button type="button" class="btn btn-primary btn-ripple" id="markAllReadBtn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Mark All as Read
+    </button>
+  </div>
+ 
+  <!-- ============================================================
+       SUMMARY CARDS
+  ============================================================= -->
+  <div class="summary-grid">
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-blue"></div>
+      <div class="summary-icon icon-blue">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Total Messages</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-green"></div>
+      <div class="summary-icon icon-green">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" opacity="0"/><path d="M3 5.5l9 6.5 9-6.5"/><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M6.5 14.5L4 17M17.5 14.5L20 17"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Read Messages</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-amber"></div>
+      <div class="summary-icon icon-amber">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 6l9 7 9-7"/><circle cx="19" cy="6" r="4" fill="currentColor" stroke="none"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Unread Messages</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-purple"></div>
+      <div class="summary-icon icon-purple">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10l9-6 9 6-9 6-9-6z"/><path d="M3 10v6l9 6 9-6v-6"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Replied Messages</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       SEARCH + FILTERS
+  ============================================================= -->
+  <div class="card filter-card reveal">
+    <div class="filter-row">
+ 
+      <div class="table-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="contactSearch" placeholder="Search by Name, Email or Subject...">
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="statusFilter" class="filter-select">
+          <option value="">Status</option>
+          <option value="read">Read</option>
+          <option value="unread">Unread</option>
+          <option value="replied">Replied</option>
+        </select>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="subjectFilter" class="filter-select">
+          <option value="">Subject</option>
+          <option value="general">General Enquiry</option>
+          <option value="booking">Booking Support</option>
+          <option value="complaint">Complaint</option>
+          <option value="partnership">Partnership</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="dateRangeFilter" class="filter-select">
+          <option value="">Date Range</option>
+          <option value="today">Today</option>
+          <option value="7days">Last 7 Days</option>
+          <option value="30days">Last 30 Days</option>
+          <option value="custom">Custom Range</option>
+        </select>
+      </div>
+ 
+      <button type="button" class="btn btn-ghost" id="resetFiltersBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Filters
+      </button>
+ 
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       CONTACTS TABLE
+  ============================================================= -->
+  <div class="card table-card reveal">
+ 
+    <div class="table-scroll">
+      <table class="contacts-table">
+        <thead>
+          <tr>
+            <th class="th-checkbox"><input type="checkbox" id="selectAllCheckbox" class="row-checkbox"></th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Subject</th>
+            <th>Message</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th class="th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="contactsTableBody">
+          <!-- Populated dynamically. Empty on load since DB has no messages. -->
+        </tbody>
+      </table>
+    </div>
+ 
+    <!-- ============================================================
+         EMPTY STATE — shown when there are no messages
+    ============================================================= -->
+    <div class="empty-state" id="contactsEmptyState">
+      <div class="empty-illustration">
+        <svg viewBox="0 0 140 140" width="120" height="120" fill="none">
+          <circle cx="70" cy="70" r="66" fill="var(--pill-bg)"/>
+          <g class="empty-float">
+            <rect x="30" y="46" width="80" height="54" rx="10" fill="var(--card)" stroke="var(--blue-2)" stroke-width="3"/>
+            <path d="M34 52l36 26 36-26" fill="none" stroke="var(--blue-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <g class="empty-float empty-float-delay">
+            <circle cx="34" cy="34" r="5" fill="none" stroke="var(--pill-line)" stroke-width="2.4"/>
+          </g>
+          <g class="empty-float empty-float-delay2">
+            <circle cx="108" cy="100" r="4" fill="none" stroke="var(--pill-line)" stroke-width="2.4"/>
+          </g>
+        </svg>
+      </div>
+      <h3 class="empty-heading">No Messages Found</h3>
+      <p class="empty-description">
+        No contact messages have been received yet.<br>
+        Messages submitted by users through the Contact page will automatically appear here.
+      </p>
+      <button type="button" class="btn btn-primary btn-ripple" id="refreshMessagesBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Refresh Messages
+      </button>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       PAGINATION
+  ============================================================= -->
+  <div class="pagination-row reveal">
+    <span class="pagination-info">Showing 0 to 0 of 0 Messages</span>
+    <div class="pagination-controls">
+      <button type="button" class="page-btn" id="prevPageBtn" disabled>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Previous
+      </button>
+      <button type="button" class="page-btn page-btn-active">1</button>
+      <button type="button" class="page-btn" id="nextPageBtn" disabled>
+        Next
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+ 
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'adminapp/js/contacts.js' %}?v=1.1"></script>
+{% endblock %}

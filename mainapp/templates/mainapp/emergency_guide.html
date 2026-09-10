@@ -1,0 +1,298 @@
+{% extends 'mainapp/base_dashboard.html' %}
+{% load static %}
+ 
+{% block title %}Emergency Guide{% endblock %}
+ 
+{% block search_placeholder %}Search emergency guides, contacts…{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainapp/css/emergency-guide.css' %}?v=1.1">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- ======================= HERO ======================= -->
+<section class="hero emg-hero fade-in-up">
+  <div class="emg-hero-art" aria-hidden="true">
+    <svg class="emg-route" viewBox="0 0 620 180" fill="none" preserveAspectRatio="none">
+      <path d="M10 150 C 160 40, 260 190, 610 40" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+    </svg>
+    <svg class="emg-plane" viewBox="0 0 24 24" fill="none">
+      <path d="M21 3 3 10.5l7 2.5m11-10L13.5 21l-2.5-7m10-10L10.5 13.5" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <i class="fa-solid fa-cloud emg-cloud emg-cloud-1"></i>
+    <i class="fa-solid fa-cloud emg-cloud emg-cloud-2"></i>
+    <i class="fa-solid fa-cloud emg-cloud emg-cloud-3"></i>
+    <i class="fa-solid fa-landmark-dome emg-landmark emg-landmark-1"></i>
+    <i class="fa-solid fa-monument emg-landmark emg-landmark-2"></i>
+    <i class="fa-solid fa-mountain-city emg-landmark emg-landmark-3"></i>
+    <i class="fa-solid fa-mountain emg-mountain"></i>
+    <i class="fa-solid fa-location-dot emg-pin"></i>
+  </div>
+ 
+  <div class="emg-hero-inner">
+    <div class="emg-hero-icon">
+      <i class="fa-solid fa-shield-heart"></i>
+    </div>
+    <div class="hero-text emg-hero-text">
+      <h1>Emergency Guide</h1>
+      <p>Stay safe while travelling with important contacts, emergency procedures and safety guidance for every situation.</p>
+    </div>
+  </div>
+</section>
+ 
+<!-- ======================= MAIN LAYOUT ======================= -->
+<div class="emg-layout fade-in-up">
+ 
+  <!-- ---------- LEFT: EMERGENCY CONTENT ---------- -->
+  <div class="emg-main">
+ 
+    <!-- SECTION 1: QUICK ACTIONS -->
+    <section class="section-block">
+      <div class="section-head">
+        <h3>Quick Actions</h3>
+      </div>
+ 
+      <div class="emg-quick-grid">
+ 
+        <div class="emg-quick-card">
+          <div class="emg-quick-icon emg-icon-red"><i class="fa-solid fa-phone"></i></div>
+          <h4>Call Emergency</h4>
+          <p>Quick dial local emergency number</p>
+          <a href="tel:112" class="emg-quick-btn emg-btn-red">Call 112</a>
+        </div>
+ 
+        <div class="emg-quick-card">
+          <div class="emg-quick-icon emg-icon-blue"><i class="fa-solid fa-briefcase-medical"></i></div>
+          <h4>Find Hospital</h4>
+          <p>Locate nearest hospitals near you</p>
+          <a href="#" class="emg-quick-btn emg-btn-blue">Find Now</a>
+        </div>
+ 
+        <div class="emg-quick-card">
+          <div class="emg-quick-icon emg-icon-green"><i class="fa-solid fa-shield-halved"></i></div>
+          <h4>Travel Insurance</h4>
+          <p>Access your travel insurance details</p>
+          <a href="#" class="emg-quick-btn emg-btn-green">View Policy</a>
+        </div>
+ 
+        <div class="emg-quick-card">
+          <div class="emg-quick-icon emg-icon-purple"><i class="fa-solid fa-landmark"></i></div>
+          <h4>Embassy Finder</h4>
+          <p>Find your nearest embassy/consulate</p>
+          <a href="#" class="emg-quick-btn emg-btn-purple">Search</a>
+        </div>
+ 
+      </div>
+    </section>
+ 
+    <!-- SECTION 2: WHAT TO DO IN AN EMERGENCY -->
+    <section class="section-block">
+      <div class="section-head">
+        <h3><i class="fa-solid fa-triangle-exclamation emg-warn-icon"></i> What to Do in an Emergency</h3>
+      </div>
+ 
+      <div class="emg-timeline">
+ 
+        <div class="emg-step">
+          <span class="emg-step-num emg-num-red">1</span>
+          <div class="emg-step-icon"><i class="fa-solid fa-phone-volume"></i></div>
+          <h4>Stay Calm</h4>
+          <p>Take a deep breath and assess the situation.</p>
+        </div>
+ 
+        <span class="emg-step-line"></span>
+ 
+        <div class="emg-step">
+          <span class="emg-step-num emg-num-blue">2</span>
+          <div class="emg-step-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
+          <h4>Ensure Safety</h4>
+          <p>Move to a safe place and check for any immediate danger.</p>
+        </div>
+ 
+        <span class="emg-step-line"></span>
+ 
+        <div class="emg-step">
+          <span class="emg-step-num emg-num-green">3</span>
+          <div class="emg-step-icon"><i class="fa-solid fa-phone"></i></div>
+          <h4>Call Emergency Services</h4>
+          <p>Contact local emergency services immediately.</p>
+        </div>
+ 
+        <span class="emg-step-line"></span>
+ 
+        <div class="emg-step">
+          <span class="emg-step-num emg-num-purple">4</span>
+          <div class="emg-step-icon"><i class="fa-solid fa-user-shield"></i></div>
+          <h4>Provide Details</h4>
+          <p>Share your location and full details of the situation.</p>
+        </div>
+ 
+        <span class="emg-step-line"></span>
+ 
+        <div class="emg-step">
+          <span class="emg-step-num emg-num-orange">5</span>
+          <div class="emg-step-icon"><i class="fa-solid fa-kit-medical"></i></div>
+          <h4>Follow Guidance</h4>
+          <p>Follow official instructions and wait for assistance.</p>
+        </div>
+ 
+      </div>
+    </section>
+ 
+    <!-- SECTION 3: EMERGENCY BY CATEGORY -->
+    <section class="section-block">
+      <div class="section-head">
+        <h3>Emergency by Category</h3>
+      </div>
+ 
+      <div class="emg-category-grid">
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-red"><i class="fa-solid fa-heart-pulse"></i></div>
+          <h4>Medical Emergency</h4>
+          <p>Illness, injury or medical assistance</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-blue"><i class="fa-solid fa-file-lines"></i></div>
+          <h4>Lost Documents</h4>
+          <p>Passport, ID card or travel documents</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-orange"><i class="fa-solid fa-user-ninja"></i></div>
+          <h4>Theft / Robbery</h4>
+          <p>Report theft or report a crime</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-green"><i class="fa-solid fa-cloud-bolt"></i></div>
+          <h4>Natural Disasters</h4>
+          <p>Earthquake, flood, storm, etc.</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-purple"><i class="fa-solid fa-plane-slash"></i></div>
+          <h4>Flight Issues</h4>
+          <p>Flight delays, cancellations or missed flights</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-teal"><i class="fa-solid fa-cloud-showers-heavy"></i></div>
+          <h4>Extreme Weather</h4>
+          <p>Heavy rain, snow, cyclone, etc.</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-red"><i class="fa-solid fa-people-group"></i></div>
+          <h4>Civil Unrest</h4>
+          <p>Strikes, protests or political issues</p>
+        </a>
+ 
+        <a href="#" class="emg-cat-card">
+          <div class="emg-cat-icon emg-icon-blue"><i class="fa-solid fa-person-circle-question"></i></div>
+          <h4>Missing Person</h4>
+          <p>Report a missing person</p>
+        </a>
+ 
+      </div>
+    </section>
+ 
+    <a href="#" class="emg-outline-btn">
+      <span>View Detailed Emergency Guides</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </a>
+ 
+  </div>
+ 
+  <!-- ---------- RIGHT: SIDEBAR ---------- -->
+  <aside class="emg-side">
+ 
+    <div class="emg-side-card">
+      <div class="section-head">
+        <h3><span class="emg-sos-badge">SOS</span> Emergency Contacts</h3>
+      </div>
+ 
+      <ul class="emg-contact-list">
+        <li class="emg-contact-item">
+          <div class="emg-contact-icon emg-icon-purple"><i class="fa-solid fa-user-shield"></i></div>
+          <div class="emg-contact-info">
+            <span class="emg-contact-name">Police</span>
+          </div>
+          <span class="emg-contact-number">100 / 112</span>
+          <a href="tel:100" class="emg-call-btn" aria-label="Call Police"><i class="fa-solid fa-phone"></i></a>
+        </li>
+        <li class="emg-contact-item">
+          <div class="emg-contact-icon emg-icon-red"><i class="fa-solid fa-truck-medical"></i></div>
+          <div class="emg-contact-info">
+            <span class="emg-contact-name">Ambulance</span>
+          </div>
+          <span class="emg-contact-number">108 / 112</span>
+          <a href="tel:108" class="emg-call-btn" aria-label="Call Ambulance"><i class="fa-solid fa-phone"></i></a>
+        </li>
+        <li class="emg-contact-item">
+          <div class="emg-contact-icon emg-icon-orange"><i class="fa-solid fa-fire-flame-curved"></i></div>
+          <div class="emg-contact-info">
+            <span class="emg-contact-name">Fire Department</span>
+          </div>
+          <span class="emg-contact-number">101</span>
+          <a href="tel:101" class="emg-call-btn" aria-label="Call Fire Department"><i class="fa-solid fa-phone"></i></a>
+        </li>
+        <li class="emg-contact-item">
+          <div class="emg-contact-icon emg-icon-blue"><i class="fa-solid fa-globe"></i></div>
+          <div class="emg-contact-info">
+            <span class="emg-contact-name">Tourist Helpline</span>
+          </div>
+          <span class="emg-contact-number">1363</span>
+          <a href="tel:1363" class="emg-call-btn" aria-label="Call Tourist Helpline"><i class="fa-solid fa-phone"></i></a>
+        </li>
+        <li class="emg-contact-item">
+          <div class="emg-contact-icon emg-icon-pink"><i class="fa-solid fa-person-dress"></i></div>
+          <div class="emg-contact-info">
+            <span class="emg-contact-name">Women Helpline</span>
+          </div>
+          <span class="emg-contact-number">1091</span>
+          <a href="tel:1091" class="emg-call-btn" aria-label="Call Women Helpline"><i class="fa-solid fa-phone"></i></a>
+        </li>
+        <li class="emg-contact-item">
+          <div class="emg-contact-icon emg-icon-teal"><i class="fa-solid fa-car-burst"></i></div>
+          <div class="emg-contact-info">
+            <span class="emg-contact-name">Traffic Assistance</span>
+          </div>
+          <span class="emg-contact-number">103</span>
+          <a href="tel:103" class="emg-call-btn" aria-label="Call Traffic Assistance"><i class="fa-solid fa-phone"></i></a>
+        </li>
+      </ul>
+ 
+      <a href="#" class="emg-side-btn emg-side-btn-outline">View All Contacts</a>
+    </div>
+ 
+    <div class="emg-side-card">
+      <div class="section-head">
+        <h3><i class="fa-solid fa-circle-check emg-tips-icon"></i> Safety Tips for Travelers</h3>
+      </div>
+ 
+      <ul class="emg-tips-list">
+        <li><i class="fa-solid fa-circle-check"></i><span>Keep digital &amp; physical copies of important documents.</span></li>
+        <li><i class="fa-solid fa-circle-check"></i><span>Share your itinerary with family or friends.</span></li>
+        <li><i class="fa-solid fa-circle-check"></i><span>Avoid unsafe areas and follow local warnings.</span></li>
+        <li><i class="fa-solid fa-circle-check"></i><span>Keep emergency contacts saved in your phone.</span></li>
+        <li><i class="fa-solid fa-circle-check"></i><span>Always have a backup of your travel insurance.</span></li>
+      </ul>
+ 
+      <a href="#" class="emg-side-btn emg-side-btn-green">
+        <span>Learn More Safety Tips</span>
+        <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+ 
+  </aside>
+ 
+</div>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'mainapp/js/emergency-guide.js' %}?v=1.5" defer></script>
+{% endblock %}

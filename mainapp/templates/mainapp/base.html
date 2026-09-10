@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}TravelGenie — Plan Smarter. Travel Better.{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'mainapp/css/base.css' %}">
+ 
+<!-- Page-specific stylesheet -->
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if messages %}
+<div class="toast-container" id="toastContainer">
+  {% for message in messages %}
+  <div class="toast-alert alert-{{ message.tags }}">
+    <div class="toast-content">
+      <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+      <span>{{ message }}</span>
+    </div>
+    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  {% endfor %}
+</div>
+<script>
+  setTimeout(() => {
+    const toastContainer = document.getElementById('toastContainer');
+    if (toastContainer) {
+      toastContainer.classList.add('fade-out');
+      setTimeout(() => toastContainer.remove(), 400);
+    }
+  }, 5000);
+</script>
+{% endif %}
+
+<!-- Sidebar overlay for mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+ 
+<!-- Mobile Sidebar Menu -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <a href="{% url 'mainapp:home' %}" class="logo">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21.44 3.56L2.98 10.3c-.86.31-.85 1.53.02 1.83l7.53 2.58 2.58 7.53c.3.87 1.52.88 1.83.02l6.74-18.46c.26-.72-.44-1.42-1.16-1.16 0-.01-.08-.01-.08-.01z" fill="url(#logoGrad)"/>
+        <defs>
+          <linearGradient id="logoGrad" x1="2" y1="3" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#3F9AAE"/>
+            <stop offset="1" stop-color="#F47661"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span>Travel<em>Genie</em></span>
+    </a>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L15 15M15 1L1 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+ 
+  <nav class="sidebar-nav">
+    <a href="{% url 'mainapp:home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 11L12 3L21 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span>Home</span>
+    </a>
+    <a href="{% url 'mainapp:about' %}" class="nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7.5" r="1" fill="currentColor"/></svg>
+      </span>
+      <span>About</span>
+    </a>
+    <a href="{% url 'mainapp:contact' %}" class="nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 6.5L12 13L21 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span>Contact</span>
+    </a>
+ 
+    <div class="nav-divider"></div>
+ 
+    <a href="{% url 'mainapp:login' %}" class="nav-item {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 17l5-5-5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span>Login</span>
+    </a>
+    <a href="{% url 'mainapp:register' %}" class="nav-item {% if request.resolver_match.url_name == 'register' %}active{% endif %}">
+      <span class="nav-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M19 8v6M22 11h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span>Register</span>
+    </a>
+  </nav>
+</aside>
+ 
+<!-- Main -->
+<div class="main" id="mainContent">
+ 
+  <!-- Top Navigation -->
+  <header class="topbar">
+    <div class="airplane-indicator" id="navAirplaneIndicator"></div>
+    <div class="topbar-left">
+      <a href="{% url 'mainapp:home' %}" class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21.44 3.56L2.98 10.3c-.86.31-.85 1.53.02 1.83l7.53 2.58 2.58 7.53c.3.87 1.52.88 1.83.02l6.74-18.46c.26-.72-.44-1.42-1.16-1.16 0-.01-.08-.01-.08-.01z" fill="url(#logoGradTop)"/>
+          <defs>
+            <linearGradient id="logoGradTop" x1="2" y1="3" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#AF719D"/>
+              <stop offset="1" stop-color="#C18BB2"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>Travel<em>Genie</em></span>
+      </a>
+    </div>
+
+    <nav class="topbar-center">
+      <a href="{% url 'mainapp:home' %}" class="top-nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+      <a href="{% url 'mainapp:about' %}" class="top-nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
+      <a href="{% url 'mainapp:contact' %}" class="top-nav-item {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">Contact</a>
+    </nav>
+ 
+    <div class="topbar-right">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg id="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.2M12 19.8V22M4.2 4.2l1.5 1.5M18.3 18.3l1.5 1.5M2 12h2.2M19.8 12H22M4.2 19.8l1.5-1.5M18.3 5.7l1.5-1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg id="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      {% if request.user.is_authenticated %}
+        {% if request.user.is_staff %}
+          <a href="{% url 'adminapp:admin_dashboard' %}" class="btn btn-outline desktop-only">Admin Dashboard</a>
+        {% else %}
+          <a href="{% url 'mainapp:dashboard' %}" class="btn btn-outline desktop-only">Dashboard</a>
+        {% endif %}
+        <a href="{% url 'mainapp:logout' %}" class="btn btn-filled desktop-only">Logout</a>
+      {% else %}
+        <a href="{% url 'mainapp:login' %}" class="btn btn-outline desktop-only {% if request.resolver_match.url_name == 'login' %}active{% endif %}">Login</a>
+        <a href="{% url 'mainapp:register' %}" class="btn btn-filled desktop-only {% if request.resolver_match.url_name == 'register' %}active{% endif %}">Register</a>
+      {% endif %}
+      <button class="menu-btn mobile-only" id="menuBtn" aria-label="Toggle menu">
+        <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><path d="M1 1H17M1 7H17M1 13H17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </header>
+ 
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+ 
+  <!-- Footer -->
+  <footer class="footer" id="contactSection">
+    <p>&copy; 2026 TravelGenie.</p>
+    <p>Plan smarter. Travel better. <a href="mailto:hello@travelgenie.app">hello@travelgenie.app</a></p>
+  </footer>
+ 
+</div>
+ 
+<script src="{% static 'mainapp/js/base.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const indicator = document.getElementById('navAirplaneIndicator');
+    // Select all nav links, plus login/register buttons
+    const navItems = document.querySelectorAll('.top-nav-item, .topbar-right .btn');
+    const container = document.querySelector('.topbar'); // Parent container is now the full topbar
+
+    if (!indicator || !container) return;
+
+    function moveIndicatorTo(item, isInitial = false) {
+      const containerRect = container.getBoundingClientRect();
+      const itemRect = item.getBoundingClientRect();
+      
+      const targetLeft = itemRect.left - containerRect.left + (itemRect.width / 2);
+      
+      if (isInitial) {
+        indicator.style.transition = 'none';
+        indicator.style.left = targetLeft + 'px';
+        indicator.offsetHeight; 
+        indicator.style.transition = 'transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), left 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        return;
+      }
+
+      const currentLeft = parseFloat(indicator.style.left) || 0;
+      indicator.classList.remove('fly-left', 'fly-right');
+      
+      if (targetLeft > currentLeft + 5) {
+        indicator.classList.add('fly-right');
+      } else if (targetLeft < currentLeft - 5) {
+        indicator.classList.add('fly-left');
+      }
+
+      // Draw direction curved flight path
+      const pathWidth = Math.abs(targetLeft - currentLeft);
+      if (pathWidth > 20) {
+        const svgNS = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.setAttribute('class', 'flight-path-curve');
+        svg.setAttribute('width', pathWidth);
+        svg.setAttribute('height', '60');
+        
+        const path = document.createElementNS(svgNS, 'path');
+        // Simple arc: M 0 30 Q mid -20 end 30
+        const d = `M 0 50 Q ${pathWidth/2} -10 ${pathWidth} 50`;
+        path.setAttribute('d', d);
+        
+        svg.appendChild(path);
+        
+        const startX = (targetLeft > currentLeft) ? currentLeft : targetLeft;
+        svg.style.left = startX + 'px';
+        container.appendChild(svg);
+        
+        // Make airplane follow arc
+        indicator.classList.add('fly-arc');
+        
+        setTimeout(() => {
+          if (svg.parentNode) svg.parentNode.removeChild(svg);
+        }, 800);
+      }
+
+      indicator.style.left = targetLeft + 'px';
+      
+      setTimeout(() => {
+        indicator.classList.remove('fly-left', 'fly-right', 'fly-arc');
+      }, 800);
+    }
+
+    const activeItem = document.querySelector('.top-nav-item.active, .topbar-right .btn.active') || navItems[0];
+    if (activeItem) {
+      moveIndicatorTo(activeItem, true);
+    }
+
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        // Exclude theme toggle or non-navigation buttons
+        if (!item.href || e.ctrlKey || e.metaKey || item.classList.contains('active')) return;
+        e.preventDefault(); 
+        moveIndicatorTo(item);
+        setTimeout(() => { window.location.href = item.href; }, 750);
+      });
+    });
+  });
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

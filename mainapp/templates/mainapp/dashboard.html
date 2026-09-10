@@ -1,0 +1,232 @@
+{% extends 'mainapp/base_dashboard.html' %}
+{% load static %}
+ 
+{% block title %}Dashboard — TravelGenie{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainapp/css/dashboard-style.css' %}">
+{% endblock %}
+ 
+{% block search_placeholder %}Search destinations, hotels, flights…{% endblock %}
+ 
+{% block content %}
+ 
+    <!-- HERO -->
+    <section class="hero fade-in-up">
+      <div class="hero-text">
+        <h1 id="greetingHeading">
+          <span id="greetingWord">Hello,</span> {{ request.user.first_name|default:request.user.username }}
+        </h1>
+        <p>Where do you want to explore today?</p>
+ 
+        <!-- Routes to Trip Planner for now — point this at a dedicated
+             AI search view once you build one -->
+        <form class="ai-search" action="{% url 'mainapp:trip_planner' %}" method="get">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <input type="text" name="q" placeholder="Ask TravelGenie anything…">
+          <button type="submit" aria-label="Ask TravelGenie">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+      <div class="hero-art" aria-hidden="true" style="background-image:url('{% static "mainapp/images/dashboard/dashboard-hero.png" %}');">
+      </div>
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="quick-actions fade-in-up">
+      <a href="{% url 'mainapp:trip_planner' %}" class="qa-card qa-blue">
+        <i class="fa-solid fa-suitcase-rolling"></i><span>Plan a Trip</span>
+      </a>
+      <a href="{% url 'mainapp:budget' %}" class="qa-card qa-green">
+        <i class="fa-solid fa-wallet"></i><span>Budget Planner</span>
+      </a>
+      <a href="{% url 'mainapp:hotels' %}" class="qa-card qa-purple">
+        <i class="fa-solid fa-bed"></i><span>Find Hotels</span>
+      </a>
+      <a href="{% url 'mainapp:sightseeing' %}" class="qa-card qa-orange">
+        <i class="fa-regular fa-camera-retro"></i><span>Sightseeing</span>
+      </a>
+      <a href="{% url 'mainapp:translator' %}" class="qa-card qa-teal">
+        <i class="fa-solid fa-language"></i><span>Translator</span>
+      </a>
+      <a href="{% url 'mainapp:emergency_guide' %}" class="qa-card qa-red">
+        <i class="fa-solid fa-shield-halved"></i><span>Emergency</span>
+      </a>
+    </section>
+ 
+    <!-- DASHBOARD GRID -->
+    <section class="dash-grid fade-in-up">
+ 
+      <!-- Upcoming Trip -->
+      <article class="dash-card">
+        <div class="dash-card-head">
+          <h3><i class="fa-solid fa-calendar-check"></i> Upcoming Trip</h3>
+          <a href="{% url 'mainapp:trip_planner' %}" class="card-link">View All</a>
+        </div>
+ 
+        {% if upcoming_trip %}
+        <div class="trip-row">
+          <div class="trip-thumb" style="background-image:url('{{ upcoming_trip.image_url }}')"></div>
+          <div class="trip-info">
+            <h4>{{ upcoming_trip.destination }}</h4>
+            <p><i class="fa-solid fa-calendar"></i> {{ upcoming_trip.start_date }} – {{ upcoming_trip.end_date }}</p>
+            <p><i class="fa-solid fa-user-group"></i> {{ upcoming_trip.travelers }} Travelers</p>
+            <span class="trip-pill">In {{ upcoming_trip.days_left }} days</span>
+          </div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fa-solid fa-compass"></i>
+          <p>No upcoming trips yet.</p>
+          <a href="{% url 'mainapp:trip_planner' %}" class="empty-cta">Plan your next trip</a>
+        </div>
+        {% endif %}
+      </article>
+ 
+      <!-- AI Assistant -->
+      <article class="dash-card ai-card">
+        <div class="dash-card-head">
+          <h3><span class="ai-dot"><i class="fa-solid fa-robot"></i></span> TravelGenie AI Assistant</h3>
+        </div>
+        <p class="ai-message">
+          Hi {{ request.user.first_name|default:request.user.username }}! I can help you plan your trip, find the best deals, suggest places, translate languages and more.
+        </p>
+        <a href="{% url 'mainapp:trip_planner' %}" class="ai-cta">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Let's Plan Your Next Trip
+        </a>
+      </article>
+ 
+      <!-- Weather -->
+      <article class="dash-card">
+        <div class="dash-card-head">
+          <h3><i class="fa-solid fa-cloud-sun"></i> Weather {% if weather.city %}in {{ weather.city }}{% endif %}</h3>
+        </div>
+        {% if weather %}
+        <div class="weather-main">
+          <span class="weather-temp">{{ weather.temp }}°</span>
+          <div>
+            <p class="weather-cond">{{ weather.condition }}</p>
+            <p class="weather-range">H: {{ weather.high }}°  L: {{ weather.low }}°</p>
+          </div>
+        </div>
+        <div class="weather-strip">
+          {% for h in weather.hourly %}
+          <div class="weather-hour">
+            <span>{{ h.time }}</span>
+            <i class="fa-solid fa-sun"></i>
+            <span>{{ h.temp }}°</span>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <i class="fa-solid fa-cloud"></i>
+          <p>Weather data unavailable.</p>
+        </div>
+        {% endif %}
+      </article>
+ 
+      <!-- Travel Statistics -->
+      <article class="dash-card">
+        <div class="dash-card-head">
+          <h3><i class="fa-solid fa-chart-simple"></i> Travel Statistics</h3>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-icon stat-blue"><i class="fa-solid fa-suitcase-rolling"></i></span>
+            <span class="stat-num">{{ travel_stats.trips|default:"0" }}</span>
+            <span class="stat-label">Trips</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon stat-green"><i class="fa-solid fa-earth-americas"></i></span>
+            <span class="stat-num">{{ travel_stats.countries|default:"0" }}</span>
+            <span class="stat-label">Countries</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon stat-purple"><i class="fa-solid fa-plane"></i></span>
+            <span class="stat-num">{{ travel_stats.flights|default:"0" }}</span>
+            <span class="stat-label">Flights</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-icon stat-orange"><i class="fa-regular fa-image"></i></span>
+            <span class="stat-num">{{ travel_stats.places_visited|default:"0" }}</span>
+            <span class="stat-label">Places Visited</span>
+          </div>
+        </div>
+      </article>
+    </section>
+ 
+    <!-- POPULAR DESTINATIONS -->
+    <section class="section-block fade-in-up">
+      <div class="section-head">
+        <h3>Explore Popular Destinations</h3>
+        <a href="{% url 'mainapp:sightseeing' %}" class="card-link">See All</a>
+      </div>
+      <div class="dest-strip">
+        {% for dest in popular_destinations %}
+        <a href="{{ dest.url }}" class="dest-chip">
+          <span class="dest-chip-icon" style="background:{{ dest.gradient|default:'linear-gradient(135deg,#2F80ED,#56CCF2)' }}">
+            {{ dest.city|first|upper }}
+          </span>
+          <span class="dest-chip-info">
+            <strong>{{ dest.city }}</strong>
+            <small>{{ dest.country }}</small>
+          </span>
+          <span class="dest-chip-rating"><i class="fa-solid fa-star"></i> {{ dest.rating }}</span>
+        </a>
+        {% empty %}
+        <a href="#" class="dest-chip"><span class="dest-chip-icon" style="background:linear-gradient(135deg,#2F80ED,#56CCF2)">P</span><span class="dest-chip-info"><strong>Paris</strong><small>France</small></span><span class="dest-chip-rating"><i class="fa-solid fa-star"></i> 4.7</span></a>
+        <a href="#" class="dest-chip"><span class="dest-chip-icon" style="background:linear-gradient(135deg,#F857A6,#FF5858)">T</span><span class="dest-chip-info"><strong>Tokyo</strong><small>Japan</small></span><span class="dest-chip-rating"><i class="fa-solid fa-star"></i> 4.9</span></a>
+        <a href="#" class="dest-chip"><span class="dest-chip-icon" style="background:linear-gradient(135deg,#00C48C,#56CCF2)">D</span><span class="dest-chip-info"><strong>Dubai</strong><small>UAE</small></span><span class="dest-chip-rating"><i class="fa-solid fa-star"></i> 4.6</span></a>
+        <a href="#" class="dest-chip"><span class="dest-chip-icon" style="background:linear-gradient(135deg,#5B6EF5,#56CCF2)">S</span><span class="dest-chip-info"><strong>Santorini</strong><small>Greece</small></span><span class="dest-chip-rating"><i class="fa-solid fa-star"></i> 4.9</span></a>
+        {% endfor %}
+      </div>
+    </section>
+ 
+    <!-- RECENT SEARCHES + SAVED PLACES -->
+    <section class="bottom-grid fade-in-up">
+ 
+      <div class="section-block">
+        <div class="section-head">
+          <h3>Recent Searches</h3>
+        </div>
+        <ul class="recent-list">
+          {% for search in recent_searches %}
+          <li>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>{{ search.query }}</span>
+            <a href="{{ search.url }}" class="rerun-btn" aria-label="Search again"><i class="fa-solid fa-arrow-up-right"></i></a>
+          </li>
+          {% empty %}
+          <li><i class="fa-solid fa-clock-rotate-left"></i><span>Bangkok hotels</span><a href="#" class="rerun-btn"><i class="fa-solid fa-arrow-up-right"></i></a></li>
+          <li><i class="fa-solid fa-clock-rotate-left"></i><span>Flights to Bali</span><a href="#" class="rerun-btn"><i class="fa-solid fa-arrow-up-right"></i></a></li>
+          <li><i class="fa-solid fa-clock-rotate-left"></i><span>Paris attractions</span><a href="#" class="rerun-btn"><i class="fa-solid fa-arrow-up-right"></i></a></li>
+          {% endfor %}
+        </ul>
+      </div>
+ 
+      <div class="section-block">
+        <div class="section-head">
+          <h3>Saved Places</h3>
+          <a href="{% url 'mainapp:trip_planner' %}" class="card-link">See All</a>
+        </div>
+        <div class="chip-wrap">
+          {% for place in saved_places %}
+          <span class="saved-chip"><i class="fa-solid fa-heart"></i> {{ place.name }}</span>
+          {% empty %}
+          <span class="saved-chip"><i class="fa-solid fa-heart"></i> Santorini</span>
+          <span class="saved-chip"><i class="fa-solid fa-heart"></i> Maldives</span>
+          <span class="saved-chip"><i class="fa-solid fa-heart"></i> Dubai</span>
+          <span class="saved-chip"><i class="fa-solid fa-heart"></i> Singapore</span>
+          {% endfor %}
+        </div>
+      </div>
+ 
+    </section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+{% endblock %}

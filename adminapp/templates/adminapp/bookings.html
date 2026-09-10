@@ -1,0 +1,318 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{% block title %}Bookings{% endblock %}
+{% block page_id %}bookings{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminapp/css/bookings.css' %}">
+{% endblock %}
+ 
+{% block content %}
+<div class="bookings-page">
+ 
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================= -->
+  <div class="page-header reveal">
+    <div class="page-header-text">
+      <h1 class="page-title">Bookings</h1>
+      <p class="page-subtitle">Manage all hotel bookings and reservations.</p>
+    </div>
+    <button type="button" class="btn btn-primary btn-add-booking ripple">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      <span>Add Booking</span>
+    </button>
+  </div>
+ 
+  <!-- ============================================================
+       SUMMARY CARDS
+  ============================================================= -->
+  <div class="stats-grid reveal">
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">{{ total_bookings|default:"0" }}</span>
+        <span class="stat-label">Total Bookings</span>
+      </div>
+    </div>
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">{{ confirmed_bookings|default:"0" }}</span>
+        <span class="stat-label">Confirmed Bookings</span>
+      </div>
+    </div>
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">{{ pending_bookings|default:"0" }}</span>
+        <span class="stat-label">Pending Bookings</span>
+      </div>
+    </div>
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">{{ cancelled_bookings|default:"0" }}</span>
+        <span class="stat-label">Cancelled Bookings</span>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       SEARCH & FILTER BAR
+  ============================================================= -->
+  <div class="filter-bar card reveal">
+ 
+    <div class="filter-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="bookingSearch" placeholder="Search bookings by Booking ID, Guest Name or Hotel...">
+    </div>
+ 
+    <div class="filter-controls">
+ 
+      <div class="filter-select-wrap">
+        <select id="filterStatus" class="filter-select">
+          <option value="">Booking Status</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="pending">Pending</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="filterHotel" class="filter-select">
+          <option value="">Hotel</option>
+          <option value="taj">Taj Palace</option>
+          <option value="oberoi">The Oberoi</option>
+          <option value="itc">ITC Grand</option>
+        </select>
+        <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <div class="filter-date-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <input type="date" id="filterCheckin" class="filter-date" aria-label="Check-in date">
+      </div>
+ 
+      <div class="filter-date-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <input type="date" id="filterCheckout" class="filter-date" aria-label="Check-out date">
+      </div>
+ 
+      <button type="button" class="btn btn-ghost" id="resetFiltersBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Filters
+      </button>
+ 
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       BOOKINGS TABLE
+  ============================================================= -->
+  <div class="table-card card reveal">
+ 
+    <div class="table-scroll">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Guest Name</th>
+            <th>Hotel</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
+            <th>Guests</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsTableBody">
+          {% if bookings %}
+            {% for booking in bookings %}
+            <tr data-status="{{ booking.status }}" data-hotel="{{ booking.hotel_name|lower }}" data-checkin="{{ booking.check_in|date:'Y-m-d' }}" data-checkout="{{ booking.check_out|date:'Y-m-d' }}">
+              <td><strong>{{ booking.booking_id }}</strong></td>
+              <td>{{ booking.guest_name }}</td>
+              <td>{{ booking.hotel_name }}</td>
+              <td>{{ booking.check_in|date:"M d, Y" }}</td>
+              <td>{{ booking.check_out|date:"M d, Y" }}</td>
+              <td>{{ booking.guests }}</td>
+              <td>${{ booking.amount }}</td>
+              <td>
+                <span class="badge badge-{% if booking.status == 'confirmed' %}success{% elif booking.status == 'pending' %}warning{% else %}danger{% endif %}">
+                  {{ booking.status|title }}
+                </span>
+              </td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="action-btn" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button type="button" class="action-btn action-danger" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <!-- Empty State -->
+          <tr class="empty-row">
+            <td colspan="9">
+              <div class="empty-state">
+                <div class="empty-illustration">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="9" width="18" height="11" rx="2"/>
+                    <path d="M8 9V6a2 2 0 012-2h4a2 2 0 012 2v3"/>
+                    <path d="M3 13h18"/>
+                    <path d="M9 17h.01M15 17h.01"/>
+                  </svg>
+                </div>
+                <h3 class="empty-title">No Bookings Found</h3>
+                <p class="empty-text">No bookings have been made yet.<br>Bookings created by users will automatically appear here once available.</p>
+                <div class="empty-actions">
+                  <button type="button" class="btn btn-primary btn-add-booking ripple">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    <span>Add Booking</span>
+                  </button>
+                  <button type="button" class="btn btn-ghost ripple" id="refreshBookingsBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    <span>Refresh</span>
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       PAGINATION
+  ============================================================= -->
+  <div class="pagination-bar reveal">
+    <span class="pagination-info">Showing 0 to 0 of 0 Bookings</span>
+ 
+    <div class="pagination-controls">
+      <button type="button" class="page-btn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Previous
+      </button>
+      <button type="button" class="page-btn page-btn-active" disabled>1</button>
+      <button type="button" class="page-btn" disabled>
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       ADD BOOKING MODAL
+  ============================================================= -->
+  <div class="modal-overlay" id="addBookingModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add New Booking</h2>
+        <button type="button" class="modal-close" id="closeBookingModalBtn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'adminapp:add_booking' %}" id="addBookingForm">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <label for="booking_id">Booking ID</label>
+            <input type="text" id="booking_id" name="booking_id" placeholder="E.g. BKG-10024" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="guest_name">Guest Name</label>
+            <input type="text" id="guest_name" name="guest_name" placeholder="E.g. John Doe" required>
+          </div>
+
+          <div class="form-group">
+            <label for="hotel_name">Hotel Name</label>
+            <input type="text" id="hotel_name" name="hotel_name" placeholder="E.g. Taj Palace" required>
+          </div>
+          
+          <div style="display:flex; gap:16px;">
+            <div class="form-group" style="flex:1;">
+              <label for="check_in">Check-in</label>
+              <input type="date" id="check_in" name="check_in" required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label for="check_out">Check-out</label>
+              <input type="date" id="check_out" name="check_out" required>
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:16px;">
+            <div class="form-group" style="flex:1;">
+              <label for="guests">Guests</label>
+              <input type="number" id="guests" name="guests" min="1" value="2" required>
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label for="amount">Amount ($)</label>
+              <input type="number" id="amount" name="amount" min="0" step="0.01" value="0.00" required>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <div class="filter-select-wrap">
+              <select class="filter-select" id="status" name="status" required style="width:100%">
+                <option value="confirmed">Confirmed</option>
+                <option value="pending">Pending</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+              <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="cancelBookingModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages Display -->
+  {% if messages %}
+  <div class="toast-container">
+    {% for message in messages %}
+      <div class="toast toast-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'adminapp/js/bookings.js' %}"></script>
+{% endblock %}
+ 

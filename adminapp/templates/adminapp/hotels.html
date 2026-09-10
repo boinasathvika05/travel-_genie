@@ -1,0 +1,316 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{% block title %}Hotels{% endblock %}
+{% block page_id %}hotels{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminapp/css/hotels.css' %}?v=1.1">
+{% endblock %}
+ 
+{% block content %}
+<div class="hotels-page">
+ 
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================= -->
+  <div class="page-header reveal">
+    <div class="page-header-text">
+      <h1 class="page-title">Hotels</h1>
+      <p class="page-subtitle">Manage hotel listings, approvals and availability.</p>
+    </div>
+    <button type="button" class="btn btn-primary btn-add-hotel ripple">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      <span>Add Hotel</span>
+    </button>
+  </div>
+ 
+  <!-- ============================================================
+       STATISTICS CARDS
+  ============================================================= -->
+  <div class="stats-grid reveal">
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-blue">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01M12 10h.01"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">0</span>
+        <span class="stat-label">Total Hotels</span>
+      </div>
+    </div>
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-green">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">0</span>
+        <span class="stat-label">Active Hotels</span>
+      </div>
+    </div>
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-amber">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">0</span>
+        <span class="stat-label">Pending Hotels</span>
+      </div>
+    </div>
+ 
+    <div class="stat-card glow-card">
+      <div class="stat-icon icon-red">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
+      </div>
+      <div class="stat-body">
+        <span class="stat-value">0</span>
+        <span class="stat-label">Inactive Hotels</span>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       SEARCH & FILTER BAR
+  ============================================================= -->
+  <div class="filter-bar card reveal">
+ 
+    <div class="filter-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <input type="text" id="hotelSearch" placeholder="Search hotels...">
+    </div>
+ 
+    <div class="filter-controls">
+ 
+      <div class="filter-select-wrap">
+        <select id="filterStatus" class="filter-select">
+          <option value="">Status</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="filterCity" class="filter-select">
+          <option value="">City</option>
+          <option value="hyderabad">Hyderabad</option>
+          <option value="mumbai">Mumbai</option>
+          <option value="delhi">Delhi</option>
+          <option value="bangalore">Bangalore</option>
+        </select>
+        <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="filterRating" class="filter-select">
+          <option value="">Rating</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars &amp; below</option>
+        </select>
+        <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <button type="button" class="btn btn-ghost" id="resetFiltersBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Filters
+      </button>
+ 
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       HOTELS TABLE
+  ============================================================= -->
+  <div class="table-card card reveal">
+ 
+    <div class="table-scroll">
+      <table class="hotels-table">
+        <thead>
+          <tr>
+            <th class="col-image">Hotel Image</th>
+            <th>Hotel Name</th>
+            <th>City</th>
+            <th>Category</th>
+            <th>Rating</th>
+            <th>Status</th>
+            <th>Rooms</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="hotelsTableBody">
+          {% if hotels %}
+            {% for hotel in hotels %}
+            <tr class="hotel-row" data-status="{{ hotel.status }}" data-city="{{ hotel.city|lower }}" data-rating="{{ hotel.rating }}">
+              <td class="col-image">
+                <div class="hotel-thumb">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/><path d="M9 10h.01M15 10h.01M12 10h.01M9 14h.01M15 14h.01"/></svg>
+                </div>
+              </td>
+              <td class="fw-medium">{{ hotel.name }}</td>
+              <td>{{ hotel.city|title }}</td>
+              <td>{{ hotel.category|title }}</td>
+              <td>
+                <div class="rating">
+                  <svg class="star active" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span>{{ hotel.rating }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="badge badge-{% if hotel.status == 'active' %}success{% elif hotel.status == 'pending' %}warning{% else %}danger{% endif %}">
+                  {{ hotel.status|title }}
+                </span>
+              </td>
+              <td>{{ hotel.rooms }}</td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="action-btn" title="Edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                  <button type="button" class="action-btn action-danger" title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <!-- Empty State -->
+          <tr class="empty-row">
+            <td colspan="8">
+              <div class="empty-state">
+                <div class="empty-illustration">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 21V7l9-4 9 4v14"/>
+                    <path d="M9 21v-6h6v6"/>
+                    <path d="M9 10h.01M15 10h.01M12 10h.01M9 14h.01M15 14h.01"/>
+                  </svg>
+                </div>
+                <h3 class="empty-title">No Hotels Found</h3>
+                <p class="empty-text">No hotels have been added yet.<br>Click "Add Hotel" to create your first hotel.</p>
+                <button type="button" class="btn btn-primary btn-add-hotel ripple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                  <span>Add Hotel</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       PAGINATION
+  ============================================================= -->
+  <div class="pagination-bar reveal">
+    <span class="pagination-info">Showing 0 to 0 of 0 Hotels</span>
+ 
+    <div class="pagination-controls">
+      <button type="button" class="page-btn" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Previous
+      </button>
+      <button type="button" class="page-btn page-btn-active" disabled>1</button>
+      <button type="button" class="page-btn" disabled>
+        Next
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       ADD HOTEL MODAL
+  ============================================================= -->
+  <div class="modal-overlay" id="addHotelModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add New Hotel</h2>
+        <button type="button" class="modal-close" id="closeHotelModalBtn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'adminapp:add_hotel' %}" id="addHotelForm">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <label for="name">Hotel Name</label>
+            <input type="text" id="name" name="name" placeholder="E.g. Grand Plaza Resort" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" placeholder="E.g. Mumbai" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="category">Category</label>
+            <div class="filter-select-wrap">
+              <select class="filter-select" id="category" name="category" required style="width:100%">
+                <option value="hotel">Hotel</option>
+                <option value="resort">Resort</option>
+                <option value="villa">Villa</option>
+                <option value="guesthouse">Guesthouse</option>
+              </select>
+              <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="rating">Rating (Stars)</label>
+            <input type="number" id="rating" name="rating" min="1" max="5" value="5" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="rooms">Number of Rooms</label>
+            <input type="number" id="rooms" name="rooms" min="1" value="10" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="status">Status</label>
+            <div class="filter-select-wrap">
+              <select class="filter-select" id="status" name="status" required style="width:100%">
+                <option value="active">Active</option>
+                <option value="pending">Pending</option>
+                <option value="inactive">Inactive</option>
+              </select>
+              <svg class="select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="cancelHotelModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Hotel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages Display -->
+  {% if messages %}
+  <div class="toast-container">
+    {% for message in messages %}
+      <div class="toast toast-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'adminapp/js/hotels.js' %}"></script>
+{% endblock %}
+ 

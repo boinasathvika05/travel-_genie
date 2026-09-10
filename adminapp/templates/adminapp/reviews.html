@@ -1,0 +1,208 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{% block title %}Reviews{% endblock %}
+{% block page_id %}reviews{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminapp/css/reviews.css' %}?v=1.1">
+{% endblock %}
+ 
+{% block content %}
+<div class="reviews-page">
+ 
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================= -->
+  <div class="page-header">
+    <div class="page-header-text">
+      <h1 class="page-title">Reviews</h1>
+      <p class="page-subtitle">Manage user reviews and ratings for hotels and destinations.</p>
+    </div>
+    <button type="button" class="btn btn-primary btn-ripple" id="moderateBtn">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Moderate Reviews
+    </button>
+  </div>
+ 
+  <!-- ============================================================
+       SUMMARY CARDS
+  ============================================================= -->
+  <div class="summary-grid">
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-blue"></div>
+      <div class="summary-icon icon-blue">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.9 6.3 6.9.9-5 4.8 1.3 6.8L12 17.6l-6.1 3.2 1.3-6.8-5-4.8 6.9-.9L12 2z"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Total Reviews</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-green"></div>
+      <div class="summary-icon icon-green">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Approved Reviews</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-amber"></div>
+      <div class="summary-icon icon-amber">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Pending Reviews</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+    <div class="summary-card reveal">
+      <div class="summary-glow summary-glow-red"></div>
+      <div class="summary-icon icon-red">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      </div>
+      <div class="summary-body">
+        <span class="summary-label">Reported Reviews</span>
+        <span class="summary-value">0</span>
+      </div>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       SEARCH + FILTERS
+  ============================================================= -->
+  <div class="card filter-card reveal">
+    <div class="filter-row">
+ 
+      <div class="table-search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="text" id="reviewSearch" placeholder="Search reviews by user, hotel or destination...">
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="ratingFilter" class="filter-select">
+          <option value="">Rating</option>
+          <option value="5">5 Stars</option>
+          <option value="4">4 Stars</option>
+          <option value="3">3 Stars</option>
+          <option value="2">2 Stars</option>
+          <option value="1">1 Star</option>
+        </select>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="statusFilter" class="filter-select">
+          <option value="">Review Status</option>
+          <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
+          <option value="reported">Reported</option>
+        </select>
+      </div>
+ 
+      <div class="filter-select-wrap">
+        <select id="typeFilter" class="filter-select">
+          <option value="">Review Type</option>
+          <option value="hotel">Hotel</option>
+          <option value="destination">Destination</option>
+        </select>
+      </div>
+ 
+      <button type="button" class="btn btn-ghost" id="resetFiltersBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset Filters
+      </button>
+ 
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       REVIEWS TABLE
+  ============================================================= -->
+  <div class="card table-card reveal">
+ 
+    <div class="table-scroll">
+      <table class="reviews-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Hotel / Destination</th>
+            <th>Rating</th>
+            <th>Review</th>
+            <th>Submitted Date</th>
+            <th>Status</th>
+            <th class="th-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="reviewsTableBody">
+          <!-- Populated dynamically. Empty on load since DB has no reviews. -->
+        </tbody>
+      </table>
+    </div>
+ 
+    <!-- ============================================================
+         EMPTY STATE — shown when there are no reviews
+    ============================================================= -->
+    <div class="empty-state" id="reviewsEmptyState">
+      <div class="empty-illustration">
+        <svg viewBox="0 0 140 140" width="120" height="120" fill="none">
+          <circle cx="70" cy="70" r="66" fill="var(--pill-bg)"/>
+          <g class="empty-float">
+            <path d="M70 34l9.9 20.06 22.14 3.22-16.02 15.62 3.78 22.04L70 84.6l-19.8 10.34 3.78-22.04L37.96 57.28l22.14-3.22z"
+                  fill="none" stroke="var(--blue-2)" stroke-width="3.2" stroke-linejoin="round"/>
+          </g>
+          <g class="empty-float empty-float-delay">
+            <path d="M38 100l6.6 13.38 14.76 2.14-10.68 10.42 2.52 14.7-13.2-6.9-13.2 6.9 2.52-14.7-10.68-10.42 14.76-2.14z"
+                  fill="none" stroke="var(--pill-line)" stroke-width="2.4" stroke-linejoin="round" transform="translate(0 -14) scale(0.55)"/>
+          </g>
+          <g class="empty-float empty-float-delay2">
+            <path d="M108 96l6.6 13.38 14.76 2.14-10.68 10.42 2.52 14.7-13.2-6.9-13.2 6.9 2.52-14.7-10.68-10.42 14.76-2.14z"
+                  fill="none" stroke="var(--pill-line)" stroke-width="2.4" stroke-linejoin="round" transform="translate(64 -10) scale(0.5)"/>
+          </g>
+        </svg>
+      </div>
+      <h3 class="empty-heading">No Reviews Available</h3>
+      <p class="empty-description">
+        No users have submitted reviews yet.<br>
+        Reviews will automatically appear here after users rate hotels or destinations.
+      </p>
+      <button type="button" class="btn btn-primary btn-ripple" id="refreshReviewsBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Refresh Reviews
+      </button>
+    </div>
+ 
+  </div>
+ 
+  <!-- ============================================================
+       PAGINATION
+  ============================================================= -->
+  <div class="pagination-row reveal">
+    <span class="pagination-info">Showing 0 to 0 of 0 Reviews</span>
+    <div class="pagination-controls">
+      <button type="button" class="page-btn" id="prevPageBtn" disabled>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        Previous
+      </button>
+      <button type="button" class="page-btn page-btn-active">1</button>
+      <button type="button" class="page-btn" id="nextPageBtn" disabled>
+        Next
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+ 
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'adminapp/js/reviews.js' %}?v=1.1"></script>
+{% endblock %}
+ 

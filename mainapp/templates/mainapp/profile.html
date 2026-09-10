@@ -1,0 +1,127 @@
+{% extends 'mainapp/base_dashboard.html' %}
+{% load static %}
+ 
+{% block title %}Profile{% endblock %}
+ 
+{% block search_placeholder %}Search anything...{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainapp/css/profile-style.css' %}?v=1.1">
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- ======================= HERO ======================= -->
+<section class="hero pf-hero fade-in-up">
+  <div class="pf-hero-art" aria-hidden="true">
+    <i class="fa-solid fa-mountain pf-mountain pf-mountain-1"></i>
+    <i class="fa-solid fa-mountain pf-mountain pf-mountain-2"></i>
+    <i class="fa-solid fa-tree pf-tree"></i>
+    <svg class="pf-route" viewBox="0 0 700 190" fill="none" preserveAspectRatio="none">
+      <path d="M40 150 C 220 90, 320 210, 560 60" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-dasharray="2 8" stroke-linecap="round"/>
+    </svg>
+    <svg class="pf-plane" viewBox="0 0 24 24" fill="none">
+      <path d="M21 3 3 10.5l7 2.5m11-10L13.5 21l-2.5-7m10-10L10.5 13.5" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <i class="fa-solid fa-cloud pf-cloud pf-cloud-1"></i>
+    <i class="fa-solid fa-cloud pf-cloud pf-cloud-2"></i>
+    <i class="fa-solid fa-cloud pf-cloud pf-cloud-3"></i>
+    <i class="fa-regular fa-kiwi-bird pf-bird pf-bird-1"></i>
+    <i class="fa-regular fa-kiwi-bird pf-bird pf-bird-2"></i>
+    <i class="fa-solid fa-landmark pf-landmark pf-landmark-1"></i>
+    <i class="fa-solid fa-monument pf-landmark pf-landmark-2"></i>
+    <i class="fa-solid fa-mountain-city pf-landmark pf-landmark-3"></i>
+  </div>
+ 
+  <div class="pf-hero-inner">
+    <div class="pf-avatar-wrap">
+      <div class="pf-avatar">
+        <img src="{% if request.user.profile_image %}{{ request.user.profile_image.url }}{% else %}https://ui-avatars.com/api/?name={{ request.user.first_name|default:request.user.username|urlencode }}&background=random&size=300{% endif %}" alt="{{ request.user.first_name|default:'User' }}">
+      </div>
+      <button type="button" class="pf-avatar-edit" id="avatarEditBtn" aria-label="Change profile photo">
+        <i class="fa-solid fa-camera"></i>
+      </button>
+      <input type="file" id="avatarFileInput" accept="image/*" hidden>
+    </div>
+ 
+    <div class="pf-hero-text">
+      <h1>
+        {{ request.user.first_name|default:"Lucy" }}
+        <i class="fa-solid fa-circle-check pf-verified" title="Verified"></i>
+      </h1>
+      <p class="pf-tagline">Explorer&nbsp; |&nbsp; Dreamer&nbsp; |&nbsp; Traveler <i class="fa-solid fa-plane-departure"></i></p>
+ 
+      <div class="pf-meta-row">
+        <span class="pf-meta-item"><i class="fa-solid fa-location-dot"></i>Chennai, India</span>
+        <span class="pf-meta-item"><i class="fa-regular fa-calendar"></i>Joined May 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ======================= PERSONAL INFORMATION ======================= -->
+<div class="pf-content fade-in-up">
+ 
+  <div class="pf-card">
+    <div class="pf-card-head">
+      <h3><i class="fa-regular fa-user pf-head-icon"></i>Personal Information</h3>
+      <a href="#" class="pf-edit-btn" id="editProfileBtn">
+        <span>Edit Profile</span><i class="fa-solid fa-pen"></i>
+      </a>
+    </div>
+ 
+    <div class="pf-info-list">
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-regular fa-user"></i></div>
+        <span class="pf-info-label">Full Name</span>
+        <span class="pf-info-value">Lucy</span>
+      </div>
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-regular fa-envelope"></i></div>
+        <span class="pf-info-label">Email</span>
+        <span class="pf-info-value">lucy@example.com</span>
+      </div>
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-solid fa-phone"></i></div>
+        <span class="pf-info-label">Phone</span>
+        <span class="pf-info-value">+91 98765 43210</span>
+      </div>
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-solid fa-location-dot"></i></div>
+        <span class="pf-info-label">Location</span>
+        <span class="pf-info-value">Chennai, India</span>
+      </div>
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-regular fa-calendar"></i></div>
+        <span class="pf-info-label">Date of Birth</span>
+        <span class="pf-info-value">12 May 2001</span>
+      </div>
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-solid fa-globe"></i></div>
+        <span class="pf-info-label">Language</span>
+        <span class="pf-info-value">English (India)</span>
+      </div>
+ 
+      <div class="pf-info-row">
+        <div class="pf-info-icon"><i class="fa-solid fa-venus-mars"></i></div>
+        <span class="pf-info-label">Gender</span>
+        <span class="pf-info-value">Female</span>
+      </div>
+ 
+    </div>
+  </div>
+ 
+</div>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'mainapp/js/profile-script.js' %}"></script>
+{% endblock %}
+ 

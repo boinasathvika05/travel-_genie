@@ -1,0 +1,267 @@
+{% extends 'mainapp/base_dashboard.html' %}
+{% load static %}
+ 
+{% block title %}Budget Planner — TravelGenie{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'mainapp/css/budget-style.css' %}">
+{% endblock %}
+ 
+{% block search_placeholder %}Search destinations, hotels, expenses…{% endblock %}
+ 
+{% block content %}
+ 
+    <!-- PAGE HEADER -->
+    <section class="page-header">
+      <div class="header-bg" aria-hidden="true" style="background-image:url('{% static "mainapp/images/budget/budget-hero.png" %}');">
+      </div>
+ 
+      <h1>Travel Cost Calculator <i class="fa-solid fa-calculator header-icon"></i></h1>
+      <p>Plan your trip budget smartly and travel worry-free.</p>
+    </section>
+ 
+    <!-- MAIN GRID -->
+    <section class="budget-grid fade-in-up">
+ 
+      <!-- ======================= LEFT: FORM ======================= -->
+      <div class="planner-card form-card">
+        <form id="budgetForm">
+ 
+          <!-- TRIP DETAILS -->
+          <h2 class="section-title">Trip Details</h2>
+ 
+          <div class="field">
+            <label for="destination">Destination</label>
+            <div class="field-control">
+              <i class="fa-solid fa-location-dot"></i>
+              <input type="text" id="destination" name="destination" placeholder="e.g., Paris, France">
+            </div>
+          </div>
+ 
+          <div class="two-col">
+            <div class="field">
+              <label>Number of Travelers</label>
+              <div class="stepper-control">
+                <button type="button" class="stepper-btn" id="decreaseTravelers" aria-label="Decrease travelers"><i class="fa-solid fa-minus"></i></button>
+                <span class="stepper-value" id="travelerCount">3</span>
+                <button type="button" class="stepper-btn" id="increaseTravelers" aria-label="Increase travelers"><i class="fa-solid fa-plus"></i></button>
+              </div>
+            </div>
+ 
+            <div class="field">
+              <label>Length of Trip</label>
+              <div class="stepper-control with-select">
+                <button type="button" class="stepper-btn" id="decreaseDuration" aria-label="Decrease duration"><i class="fa-solid fa-minus"></i></button>
+                <span class="stepper-value" id="durationCount">1</span>
+                <button type="button" class="stepper-btn" id="increaseDuration" aria-label="Increase duration"><i class="fa-solid fa-plus"></i></button>
+                <select id="durationUnit" name="duration_unit" class="inline-select">
+                  <option value="day">Day</option>
+                  <option value="week" selected>Week</option>
+                  <option value="month">Month</option>
+                </select>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- TRANSPORT -->
+          <h2 class="section-title">Transport</h2>
+          <div id="transportRows" class="dynamic-rows">
+ 
+            <div class="cost-row transport-row" data-base="1000">
+              <div class="row-select">
+                <i class="fa-solid fa-plane"></i>
+                <select class="type-select">
+                  <option>Flight</option>
+                  <option>Train</option>
+                  <option>Bus</option>
+                  <option>Rental Car</option>
+                </select>
+              </div>
+              <div class="row-slider">
+                <input type="range" class="cost-slider" min="0" max="3000" step="50" value="1000">
+                <span class="slider-value">$1000</span>
+              </div>
+              <select class="cost-type-select">
+                <option>Per person</option>
+                <option>Total</option>
+              </select>
+              <button type="button" class="row-delete" aria-label="Remove row"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+ 
+            <div class="cost-row transport-row" data-base="250">
+              <div class="row-select">
+                <i class="fa-solid fa-car"></i>
+                <select class="type-select">
+                  <option>Driving / Taxi</option>
+                  <option>Flight</option>
+                  <option>Train</option>
+                  <option>Bus</option>
+                  <option>Rental Car</option>
+                </select>
+              </div>
+              <div class="row-slider">
+                <input type="range" class="cost-slider" min="0" max="1500" step="25" value="250">
+                <span class="slider-value">$250</span>
+              </div>
+              <select class="cost-type-select">
+                <option>Total</option>
+                <option>Per person</option>
+              </select>
+              <button type="button" class="row-delete" aria-label="Remove row"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+ 
+          </div>
+          <button type="button" class="add-row-btn" id="addTransportBtn">
+            <span>Add transport</span><i class="fa-solid fa-circle-plus"></i>
+          </button>
+ 
+          <!-- ACCOMMODATION -->
+          <h2 class="section-title">Accommodation</h2>
+          <div class="cost-row accommodation-row">
+            <i class="fa-solid fa-bed accommodation-icon"></i>
+            <div class="row-slider">
+              <input type="range" class="cost-slider" id="accommodationSlider" min="0" max="3000" step="50" value="500">
+              <span class="slider-value" id="accommodationValue">$500</span>
+            </div>
+            <select class="cost-type-select" id="accommodationType">
+              <option>Per night</option>
+              <option>Per stay</option>
+            </select>
+          </div>
+ 
+          <!-- FOOD & ENTERTAINMENT -->
+          <h2 class="section-title">Food &amp; Entertainment</h2>
+          <div id="foodRows" class="dynamic-rows">
+ 
+            <div class="food-row" data-base="250">
+              <div class="row-select">
+                <i class="fa-solid fa-utensils"></i>
+                <select class="type-select">
+                  <option>Meal</option>
+                  <option>Concert Tickets</option>
+                  <option>Shopping</option>
+                  <option>Museums</option>
+                  <option>Adventure</option>
+                </select>
+              </div>
+              <label class="cost-label">Total spend:</label>
+              <div class="field-control cost-input-wrap">
+                <span>$</span>
+                <input type="number" class="food-cost" min="0" step="10" value="250">
+              </div>
+              <button type="button" class="row-delete" aria-label="Remove row"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+ 
+            <div class="food-row" data-base="400">
+              <div class="row-select">
+                <i class="fa-solid fa-ticket"></i>
+                <select class="type-select">
+                  <option selected>Concert Tickets</option>
+                  <option>Meal</option>
+                  <option>Shopping</option>
+                  <option>Museums</option>
+                  <option>Adventure</option>
+                </select>
+              </div>
+              <label class="cost-label">Total spend:</label>
+              <div class="field-control cost-input-wrap">
+                <span>$</span>
+                <input type="number" class="food-cost" min="0" step="10" value="400">
+              </div>
+              <button type="button" class="row-delete" aria-label="Remove row"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+ 
+          </div>
+          <button type="button" class="add-row-btn" id="addFoodBtn">
+            <span>Add food/entertainment</span><i class="fa-solid fa-circle-plus"></i>
+          </button>
+ 
+          <!-- CTA -->
+          <button type="submit" class="calculate-btn" id="calculateBtn">
+            <i class="fa-solid fa-calculator"></i>
+            <span>Calculate Total Budget</span>
+          </button>
+        </form>
+      </div>
+ 
+      <!-- ======================= RIGHT: SUMMARY ======================= -->
+      <aside class="planner-card summary-card">
+ 
+        <h3 class="section-title small-title">Price Estimate</h3>
+ 
+        <div class="estimate-block">
+          <span class="estimate-label">Total Cost of the Trip</span>
+          <div class="estimate-row">
+            <span class="estimate-value" id="totalCostValue">$2,320.00</span>
+            <span class="estimate-icon"><i class="fa-solid fa-people-group"></i></span>
+          </div>
+        </div>
+ 
+        <div class="estimate-block">
+          <span class="estimate-label">Price Per Person</span>
+          <div class="estimate-row">
+            <span class="estimate-value" id="perPersonValue">$773.33</span>
+            <span class="estimate-icon"><i class="fa-solid fa-user"></i></span>
+          </div>
+        </div>
+ 
+        <h3 class="section-title small-title">Budget Breakdown</h3>
+ 
+        <div class="chart-wrap">
+          <svg id="donutChart" viewBox="0 0 160 160" class="donut-svg"></svg>
+          <div class="donut-center">
+            <span id="donutCenterLabel">100%</span>
+          </div>
+        </div>
+ 
+        <ul class="chart-legend" id="chartLegend">
+          <li><span class="dot" style="background:#2F80ED"></span>Transport <b id="legendTransport">45%</b></li>
+          <li><span class="dot" style="background:#56CCF2"></span>Accommodation <b id="legendAccommodation">22%</b></li>
+          <li><span class="dot" style="background:#9AD8FF"></span>Food/Entertainment <b id="legendFood">20%</b></li>
+          <li><span class="dot" style="background:#E0554B"></span>Activities <b id="legendActivities">8%</b></li>
+          <li><span class="dot" style="background:#B7C4D6"></span>Other <b id="legendOther">5%</b></li>
+        </ul>
+ 
+        <button type="button" class="report-btn">
+          <i class="fa-solid fa-file-lines"></i> Create Report
+        </button>
+        <button type="button" class="share-btn">
+          <i class="fa-solid fa-share-nodes"></i> Share
+        </button>
+ 
+        <div class="tip-card">
+          <span class="tip-icon"><i class="fa-regular fa-lightbulb"></i></span>
+          <div class="tip-body">
+            <strong>Smart Tip</strong>
+            <p id="tipText">Book flights 2 months in advance and stay in hostels to save up to 30% on your total trip cost!</p>
+          </div>
+          <button type="button" class="tip-next" id="tipNext" aria-label="Next tip"><i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+        
+        <div id="aiBudgetInsights" style="margin-top:20px; padding:20px; background:var(--bg); border-radius:12px; border:1px solid var(--border); display:none; font-size:14px; line-height:1.6; color:var(--ink);">
+        </div>
+      </aside>
+ 
+    </section>
+ 
+    <!-- BOTTOM INFO CARDS -->
+    <section class="info-strip fade-in-up">
+    <a href="{% url 'mainapp:profile' %}" class="info-card">
+        <span class="info-icon"><i class="fa-solid fa-shield-halved"></i></span>
+        <div><strong>Secure &amp; Private</strong><p>Your data is safe with us</p></div>
+      </a>
+      <a href="{% url 'mainapp:budget' %}" class="info-card">
+        <span class="info-icon"><i class="fa-solid fa-chart-pie"></i></span>
+        <div><strong>Budget Insights</strong><p>AI powered recommendations</p></div>
+      </a>
+      <a href="{% url 'mainapp:trip_planner' %}" class="info-card">
+        <span class="info-icon"><i class="fa-solid fa-piggy-bank"></i></span>
+        <div><strong>Save More</strong><p>Track &amp; optimize your expenses</p></div>
+      </a>
+    </section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'mainapp/js/budget-script.js' %}?v=1.3" defer></script>
+{% endblock %}

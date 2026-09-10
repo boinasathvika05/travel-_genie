@@ -1,0 +1,709 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+ 
+{% block title %}TravelGenie — Plan Smarter. Travel Better.{% endblock %}
+ 
+{% block extra_css %}
+<style>
+/* =========================================================
+   HERO SECTION
+========================================================= */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 500px;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-top: -120px;
+  padding-top: 80px;
+  margin-bottom: 40px;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+/* Ensure topbar is layered above the hero */
+.topbar {
+  z-index: 10;
+}
+/* Override topbar text color to contrast with the dark hero background */
+.topbar .logo span,
+.topbar .logo em,
+.topbar .top-nav-item {
+  color: #FFFFFF !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+.topbar .top-nav-item.active {
+  color: #FFFFFF !important;
+  font-weight: 700;
+}
+.topbar .btn-outline {
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.6) !important;
+  background: transparent !important;
+}
+.topbar .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+.topbar .theme-toggle,
+.topbar .menu-btn {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+.topbar .theme-toggle:hover,
+.topbar .menu-btn:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+ 
+.hero-media { position: absolute; inset: 0; }
+ 
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+ 
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.08);
+}
+ 
+.hero-content {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 24px;
+}
+ 
+.hero-heading {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #16233D;
+  letter-spacing: -0.5px;
+}
+ 
+.grad-text {
+  background: linear-gradient(135deg, var(--primary-blue), var(--gradient-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+ 
+.hero-subheading {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #3E4A63;
+  max-width: 440px;
+  font-weight: 400;
+}
+ 
+/* AI Chatbot Widget */
+.chatbot-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+ 
+.prompt-card {
+  width: min(420px, 90vw);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  animation: floatCard 5s ease-in-out infinite;
+}
+ 
+@keyframes floatCard {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+ 
+.prompt-card-icon {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-blue), var(--gradient-blue));
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ 
+.prompt-card-body { flex: 1; text-align: left; overflow: hidden; }
+ 
+.prompt-title {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--heading-dark);
+  margin-bottom: 2px;
+}
+ 
+.prompt-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--text);
+  outline: none;
+}
+ 
+.prompt-input::placeholder { color: #8590A6; }
+ 
+.prompt-send {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease);
+}
+ 
+.prompt-send:hover { background: var(--primary-blue-hover); transform: scale(1.08) rotate(8deg); }
+ 
+/* Suggestion chips */
+.chip-row {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+ 
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  color: #33415A;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
+}
+ 
+.chip:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: translateY(-3px);
+}
+ 
+/* =========================================================
+   POPULAR DESTINATIONS
+========================================================= */
+.destinations { margin-top: 48px; }
+ 
+.section-heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+ 
+.section-heading-row h2 { font-size: 21px; font-weight: 700; }
+ 
+.view-all {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: gap 0.2s var(--ease);
+}
+ 
+.view-all:hover { gap: 8px; }
+ 
+.destination-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+ 
+.destination-card {
+  background: #FFFFFF; /* Pure white makes it pop against the off-white background */
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+  border: 1px solid rgba(0,0,0,0.02);
+}
+ 
+.destination-card:hover { 
+  transform: translateY(-10px); 
+  box-shadow: 0 15px 40px rgba(0,0,0,0.08); 
+}
+ 
+.destination-img-wrap {
+  position: relative;
+  height: 148px;
+  overflow: hidden;
+}
+ 
+.destination-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease);
+}
+ 
+.destination-card:hover .destination-img-wrap img { transform: scale(1.08); }
+ 
+.rating-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1F2937;
+}
+ 
+.rating-badge small { color: var(--text-muted); font-weight: 500; }
+ 
+.destination-body { padding: 18px 20px 22px 20px; }
+ 
+.destination-body h3 { font-size: 17px; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+ 
+.destination-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+ 
+.destination-meta div:last-child { text-align: right; }
+ 
+.destination-meta span {
+  display: block;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+ 
+.destination-meta strong { font-size: 13.5px; font-weight: 600; }
+ 
+.btn-explore {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  background: transparent;
+  border: 1.5px solid var(--primary-blue);
+  color: var(--primary-blue);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s var(--ease);
+}
+ 
+.btn-explore:hover { 
+  background: var(--primary-blue); 
+  color: #FFFFFF; 
+  gap: 10px; 
+}
+ 
+/* =========================================================
+   AI CTA BANNER
+========================================================= */
+.cta {
+  margin-top: 48px;
+  background-color: var(--primary-blue);
+  background-image: 
+    linear-gradient(rgba(121, 128, 113, 0.75), rgba(121, 128, 113, 0.9)),
+    url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: multiply;
+  border-radius: 32px;
+  padding: 48px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.cta::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cta::after {
+  content: '';
+  position: absolute;
+  bottom: -30%; left: -10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+ 
+.cta-text { max-width: 560px; position: relative; z-index: 2; }
+ 
+.cta-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 8px 18px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+ 
+.cta-text h2 {
+  color: white;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+ 
+.cta-text p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+ 
+.btn-cta {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 999px;
+  display: inline-flex;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 15px;
+}
+ 
+.btn-cta:hover { 
+  transform: translateY(-5px) scale(1.03); 
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); 
+}
+ 
+.cta-illustration {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  animation: float-illustration 6s ease-in-out infinite;
+}
+
+.cta-illustration::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 140px; height: 140px;
+  background: rgba(255,255,255,0.2);
+  filter: blur(24px);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+@keyframes float-illustration {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+ 
+.star { animation: twinkle 2.4s ease-in-out infinite; }
+.s2 { animation-delay: 0.5s; }
+.s3 { animation-delay: 1s; }
+.s4 { animation-delay: 1.5s; }
+ 
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+ 
+/* =========================================================
+   RESPONSIVE (home-page specific)
+========================================================= */
+@media (max-width: 1080px) {
+  .destination-grid { grid-template-columns: repeat(2, 1fr); }
+  .cta { flex-direction: column; text-align: center; align-items: center; }
+  .cta-text { max-width: 100%; }
+}
+ 
+@media (max-width: 720px) {
+  .hero { height: auto; min-height: 520px; }
+  .hero-heading { font-size: 28px; }
+  .hero-content { padding: 32px 18px; }
+  .destination-grid { grid-template-columns: 1fr; }
+  .cta { padding: 30px 22px; }
+  .cta-text h2 { font-size: 21px; }
+  .cta-illustration svg { width: 150px; height: 120px; }
+}
+ 
+/* =========================================================
+   PAGE TITLE
+========================================================= */
+.home-page-title {
+  text-align: center;
+  padding: 40px 20px 20px 20px;
+  color: white;
+}
+ 
+.home-page-title h1 {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+ 
+.home-page-title p {
+  font-size: 48px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  line-height: 1.2;
+  max-width: 900px;
+  margin: 0 auto;
+}
+ 
+@media (max-width: 480px) {
+  .prompt-card { padding: 12px; gap: 10px; }
+  .home-page-title h1 { font-size: 32px; }
+  .home-page-title p { font-size: 32px; }
+  .hero { margin-top: -100px; height: 100vh; padding-top: 80px; }
+}
+</style>
+{% endblock %}
+ 
+{% block content %}
+ 
+<!-- Hero Section -->
+<section class="hero reveal">
+  <div class="hero-media">
+    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1600&q=80" alt="Beautiful travel destination" class="hero-img">
+    <div class="hero-overlay" style="background: rgba(0, 0, 0, 0.4);"></div>
+  </div>
+  <div class="hero-content">
+    <div class="home-page-title" style="padding: 0;">
+      <p><strong>GENERATIVE AI-POWERED SMART TRAVEL PLANNING SYSTEM</strong></p>
+    </div>
+  </div>
+</section>
+ 
+<!-- Popular Destinations -->
+<section class="destinations reveal" id="destinations">
+  <div class="section-heading-row">
+    <h2>Popular Destinations</h2>
+    <a href="#destinations" class="view-all">View all <span aria-hidden="true">&rarr;</span></a>
+  </div>
+ 
+  <div class="destination-grid">
+    <article class="destination-card reveal">
+      <div class="destination-img-wrap">
+        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80" alt="Eiffel Tower in Paris, France at dusk">
+        <span class="rating-badge">&#9733; 4.8 <small>(6.2k)</small></span>
+      </div>
+      <div class="destination-body">
+        <h3>Paris, France</h3>
+        <div class="destination-meta">
+          <div><span>Best Season</span><strong>Apr &ndash; Jun</strong></div>
+          <div><span>Avg Budget</span><strong>$150/day</strong></div>
+        </div>
+        <a href="{% url 'mainapp:trip_planner' %}" class="btn-explore" style="text-decoration:none;">Explore <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+ 
+    <article class="destination-card reveal">
+      <div class="destination-img-wrap">
+        <img src="https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=800&q=80" alt="Traditional pagoda street in Kyoto, Tokyo, Japan">
+        <span class="rating-badge">&#9733; 4.9 <small>(7.1k)</small></span>
+      </div>
+      <div class="destination-body">
+        <h3>Tokyo, Japan</h3>
+        <div class="destination-meta">
+          <div><span>Best Season</span><strong>Mar &ndash; May</strong></div>
+          <div><span>Avg Budget</span><strong>$120/day</strong></div>
+        </div>
+        <a href="{% url 'mainapp:trip_planner' %}" class="btn-explore" style="text-decoration:none;">Explore <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+ 
+    <article class="destination-card reveal">
+      <div class="destination-img-wrap">
+        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80" alt="Coastal cliffs and turquoise water in Bali, Indonesia">
+        <span class="rating-badge">&#9733; 4.7 <small>(5.4k)</small></span>
+      </div>
+      <div class="destination-body">
+        <h3>Bali, Indonesia</h3>
+        <div class="destination-meta">
+          <div><span>Best Season</span><strong>May &ndash; Sep</strong></div>
+          <div><span>Avg Budget</span><strong>$80/day</strong></div>
+        </div>
+        <a href="{% url 'mainapp:trip_planner' %}" class="btn-explore" style="text-decoration:none;">Explore <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+ 
+    <article class="destination-card reveal">
+      <div class="destination-img-wrap">
+        <img src="https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=800&q=80" alt="Mountain village in the Swiss Alps, Switzerland">
+        <span class="rating-badge">&#9733; 4.8 <small>(4.3k)</small></span>
+      </div>
+      <div class="destination-body">
+        <h3>Switzerland</h3>
+        <div class="destination-meta">
+          <div><span>Best Season</span><strong>May &ndash; Aug</strong></div>
+          <div><span>Avg Budget</span><strong>$180/day</strong></div>
+        </div>
+        <a href="{% url 'mainapp:trip_planner' %}" class="btn-explore" style="text-decoration:none;">Explore <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+ 
+    <article class="destination-card reveal">
+      <div class="destination-img-wrap">
+        <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" alt="Dubai, UAE skyline with Burj Khalifa at sunset">
+        <span class="rating-badge">&#9733; 4.7 <small>(6.5k)</small></span>
+      </div>
+      <div class="destination-body">
+        <h3>Dubai, UAE</h3>
+        <div class="destination-meta">
+          <div><span>Best Season</span><strong>Nov &ndash; Mar</strong></div>
+          <div><span>Avg Budget</span><strong>$130/day</strong></div>
+        </div>
+        <a href="{% url 'mainapp:trip_planner' %}" class="btn-explore" style="text-decoration:none;">Explore <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+ 
+<!-- AI CTA Banner -->
+<section class="cta reveal" id="aboutSection">
+  <div class="cta-text">
+    <span class="cta-label">ABOUT TRAVELGENIE</span>
+    <h2>About TravelGenie</h2>
+    <p>TravelGenie helps travelers plan smarter with AI-powered trip planning, hotel recommendations, budget management, and travel assistance.</p>
+    <a href="{% url 'mainapp:about' %}" class="btn btn-cta" style="text-decoration: none;">Explore More</a>
+  </div>
+  <div class="cta-illustration" aria-hidden="true">
+    <svg viewBox="0 0 220 180" width="220" height="180" xmlns="http://www.w3.org/2000/svg">
+      <circle class="star s1" cx="30" cy="24" r="2.4" fill="white"/>
+      <circle class="star s2" cx="190" cy="18" r="2" fill="white"/>
+      <circle class="star s3" cx="60" cy="150" r="1.8" fill="white"/>
+      <circle class="star s4" cx="170" cy="140" r="2.2" fill="white"/>
+      <!-- palm tree -->
+      <g transform="translate(30,60)">
+        <path d="M10 100V50" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <path d="M10 50c-14-6-22-2-28 6" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M10 50c14-6 22-2 28 6" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M10 50c-6-12-4-20 2-28" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M10 50c6-12 4-20-2-28" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M10 50c-2-16 4-22 12-26" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+      <!-- suitcase -->
+      <g transform="translate(100,70)">
+        <rect x="0" y="18" width="80" height="56" rx="10" fill="white" opacity="0.95"/>
+        <rect x="28" y="4" width="24" height="20" rx="6" fill="none" stroke="white" stroke-width="3"/>
+        <rect x="0" y="40" width="80" height="10" fill="#2F80ED" opacity="0.35"/>
+        <circle cx="18" cy="80" r="6" fill="white" opacity="0.95"/>
+        <circle cx="62" cy="80" r="6" fill="white" opacity="0.95"/>
+      </g>
+    </svg>
+  </div>
+</section>
+ 
+{% endblock %}
+ 
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+ 
+  /* =========================================================
+     SUGGESTION CHIPS -> FILL PROMPT INPUT
+  ========================================================= */
+  const promptInput = document.getElementById('promptInput');
+  const chips = document.querySelectorAll('.chip');
+ 
+  const chipPrompts = {
+    'Family Trip': 'Plan a 5-day family-friendly trip with kid activities',
+    'Solo Trip': 'Plan a 7-day solo trip for self-care, good food, and photography',
+    'Budget Trip': 'Plan a 5-day trip to Japan under $2,000',
+    'Adventure': 'Plan an adrenaline-packed 6-day adventure trip'
+  };
+ 
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const label = chip.textContent.trim();
+      promptInput.value = chipPrompts[label] || label;
+      promptInput.focus();
+    });
+  });
+ 
+  /* =========================================================
+     PROMPT SEND BUTTON
+  ========================================================= */
+  const promptSend = document.getElementById('promptSend');
+  function handleSend() {
+    const value = promptInput.value.trim();
+    if (!value) {
+      promptInput.focus();
+      return;
+    }
+    promptSend.style.transform = 'scale(0.9)';
+    setTimeout(() => { promptSend.style.transform = ''; }, 180);
+    // Placeholder action: in production this would route to the AI planner
+    console.log('TravelGenie prompt submitted:', value);
+  }
+ 
+  promptSend.addEventListener('click', handleSend);
+  promptInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSend();
+  });
+ 
+});
+</script>
+{% endblock %}
+ 

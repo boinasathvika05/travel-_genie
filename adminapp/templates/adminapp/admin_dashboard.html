@@ -1,0 +1,245 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{% block title %}Dashboard{% endblock %}
+ 
+{% block page_id %}dashboard{% endblock %}
+ 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'adminapp/css/dashboard.css' %}">
+{% endblock %}
+ 
+{% block content %}
+<div class="dashboard-content">
+ 
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-left">
+      <span class="hero-eyebrow">● Platform live</span>
+      <h1>Hello, Admin 👋</h1>
+      <p>Welcome back to TravelGenie. Manage users, hotels and bookings — all from one place.</p>
+      <div class="hero-actions">
+        <a href="{% url 'adminapp:bookings' %}" class="hero-btn primary">Manage bookings</a>
+        <a href="{% url 'adminapp:hotels' %}" class="hero-btn ghost">Add hotel</a>
+      </div>
+    </div>
+ 
+    <div class="hero-art">
+      <svg viewBox="0 0 300 190" fill="none">
+        <!-- flight route -->
+        <path class="dash-fly" d="M20 150 C 80 60, 160 170, 260 40" stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none"/>
+        <!-- pins -->
+        <circle class="pin-pulse d1" cx="20" cy="150" r="4" fill="#fff"/>
+        <circle class="pin-pulse d2" cx="150" cy="118" r="4" fill="#fff"/>
+        <circle cx="260" cy="40" r="4" fill="#fff"/>
+        <!-- globe -->
+        <circle cx="140" cy="100" r="46" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+        <ellipse cx="140" cy="100" rx="46" ry="18" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <ellipse cx="140" cy="100" rx="20" ry="46" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <line x1="94" y1="100" x2="186" y2="100" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <!-- plane -->
+        <g class="plane-float" transform="translate(228,30) rotate(35)">
+          <path d="M0 10 L26 4 L34 0 L30 8 L34 10 L26 13 L18 24 L13 24 L17 12 L6 14 L2 19 L-2 18 L1 12 L-2 8 Z" fill="#fff"/>
+        </g>
+        <!-- suitcase -->
+        <g transform="translate(40,40)">
+          <rect x="0" y="8" width="30" height="22" rx="4" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+          <rect x="10" y="2" width="10" height="8" rx="2" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+          <line x1="0" y1="18" x2="30" y2="18" stroke="rgba(255,255,255,0.3)" stroke-width="1"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+ 
+  <!-- QUICK ACTIONS -->
+  <section>
+    <div class="section-head">
+      <h2>Quick actions</h2>
+    </div>
+    <div class="quick-grid">
+      <a href="{% url 'adminapp:users' %}" class="qa-card">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="qa-title">Users</div>
+      </a>
+      <a href="{% url 'adminapp:hotels' %}" class="qa-card">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V7l9-4 9 4v14"/><path d="M9 21v-6h6v6"/></svg>
+        </div>
+        <div class="qa-title">Hotels</div>
+      </a>
+      <a href="{% url 'adminapp:destinations' %}" class="qa-card">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/></svg>
+        </div>
+        <div class="qa-title">Destinations</div>
+      </a>
+      <a href="{% url 'adminapp:bookings' %}" class="qa-card">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        </div>
+        <div class="qa-title">Bookings</div>
+      </a>
+      <a href="{% url 'adminapp:reviews' %}" class="qa-card">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.9 6.3 6.9.9-5 4.8 1.3 6.8L12 17.6l-6.1 3.2 1.3-6.8-5-4.8 6.9-.9L12 2z"/></svg>
+        </div>
+        <div class="qa-title">Reviews</div>
+      </a>
+      <a href="{% url 'adminapp:reports' %}" class="qa-card">
+        <div class="qa-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/></svg>
+        </div>
+        <div class="qa-title">Reports</div>
+      </a>
+    </div>
+  </section>
+ 
+  <!-- ROW: RECENT BOOKINGS + RECENT REVIEWS -->
+  <section class="row-2">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Recent bookings</div>
+          <div class="card-sub">Latest reservations across all hotels</div>
+        </div>
+        <a href="{% url 'adminapp:bookings' %}" class="pill-btn">View all</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Guest</th>
+            <th>Destination</th>
+            <th>Check-in</th>
+            <th>Status</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if recent_bookings %}
+            {% for b in recent_bookings %}
+            <tr>
+              <td>{{ b.guest_name }}</td>
+              <td>{{ b.hotel_name }}</td>
+              <td>{{ b.check_in|date:"M d, Y" }}</td>
+              <td><span class="status-badge status-{{ b.status }}">{{ b.status|title }}</span></td>
+              <td>${{ b.amount }}</td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <tr class="table-empty-body">
+            <td colspan="5">
+              <div class="empty-route">
+                <svg viewBox="0 0 120 56" fill="none">
+                  <path class="dash-fly" d="M6 40 C 30 10, 60 50, 114 16" stroke="currentColor" stroke-width="1.6" fill="none"/>
+                  <circle cx="6" cy="40" r="3" fill="currentColor"/>
+                  <circle cx="114" cy="16" r="3" fill="currentColor"/>
+                </svg>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+ 
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Recent reviews</div>
+          <div class="card-sub">Latest guest feedback</div>
+        </div>
+        <a href="{% url 'adminapp:reviews' %}" class="pill-btn">View all</a>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Hotel</th>
+            <th>Rating</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if recent_reviews %}
+            {% for r in recent_reviews %}
+            <tr>
+              <td>{{ r.user }}</td>
+              <td>{{ r.hotel }}</td>
+              <td style="color: #F5A623;">
+                {% if r.rating == 5 %}★★★★★{% elif r.rating == 4 %}★★★★☆{% elif r.rating == 3 %}★★★☆☆{% elif r.rating == 2 %}★★☆☆☆{% else %}★☆☆☆☆{% endif %}
+              </td>
+              <td><span class="status-badge status-{{ r.status }}">{{ r.status|title }}</span></td>
+            </tr>
+            {% endfor %}
+          {% else %}
+          <tr class="table-empty-body">
+            <td colspan="4">
+              <div class="empty-route">
+                <svg viewBox="0 0 120 56" fill="none">
+                  <path d="M60 10 L67 26 L84 28 L71 39 L75 55 L60 46 L45 55 L49 39 L36 28 L53 26 Z" stroke="currentColor" stroke-width="1.4" fill="none"/>
+                </svg>
+              </div>
+            </td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+ 
+  <!-- ROW: BOOKING OVERVIEW + BOOKING STATUS -->
+  <section class="row-2">
+    <div class="card chart-card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Booking overview</div>
+          <div class="card-sub">Trend across the selected period</div>
+        </div>
+        <button class="pill-btn">This month</button>
+      </div>
+      <div class="chart-canvas">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#4F8DFD" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#4F8DFD" stop-opacity="0.03"/>
+            </linearGradient>
+          </defs>
+          <line x1="0" y1="199" x2="400" y2="199" stroke="#E7EEFC" stroke-width="1"/>
+          <line x1="0" y1="149" x2="400" y2="149" stroke="#EFF4FD" stroke-width="1"/>
+          <line x1="0" y1="99" x2="400" y2="99" stroke="#EFF4FD" stroke-width="1"/>
+          <line x1="0" y1="49" x2="400" y2="49" stroke="#EFF4FD" stroke-width="1"/>
+        </svg>
+      </div>
+    </div>
+ 
+    <div class="card donut-card" data-confirmed="{{ total_confirmed }}" data-pending="{{ total_pending }}" data-cancelled="{{ total_cancelled }}">
+      <div class="card-head">
+        <div>
+          <div class="card-title">Booking status</div>
+          <div class="card-sub">Distribution by status</div>
+        </div>
+      </div>
+      <div class="chart-canvas">
+        <svg viewBox="0 0 200 200" style="max-width:180px;">
+          <circle cx="100" cy="100" r="72" fill="none" stroke="#EEF3FC" stroke-width="26"/>
+          <circle cx="100" cy="100" r="72" fill="none" stroke="#DCE7FB" stroke-width="26" stroke-dasharray="1 452" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="legend-row">
+        <div class="legend-item"><span class="legend-dot" style="background:#2563EB"></span>Confirmed</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#4F8DFD"></span>Pending</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#DCE7FB"></span>Cancelled</div>
+      </div>
+    </div>
+  </section>
+ 
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+<script src="{% static 'adminapp/js/dashboard.js' %}?v=1.1"></script>
+{% endblock %}

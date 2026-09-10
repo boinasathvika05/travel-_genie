@@ -1,0 +1,294 @@
+{% extends 'adminapp/admin_base.html' %}
+{% load static %}
+ 
+{# ============================================================
+   Users page — extends the shared admin layout.
+   Sidebar, navbar, theme toggle and profile dropdown all come
+   from admin_base.html. This template only fills  block content .
+   ============================================================ #}
+ 
+{% block title %}Users{% endblock %}
+{% block page_id %}users{% endblock %}
+ 
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'adminapp/css/users.css' %}">
+{% endblock %}
+ 
+{% block content %}
+<div class="users-page">
+ 
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================= -->
+  <div class="users-page-header">
+    <div>
+      <h1 class="users-title">Users</h1>
+      <p class="users-subtitle">Manage all registered users from one place.</p>
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       TOP ACTION BAR — search, filters, reset, export, add user
+  ============================================================= -->
+  <div class="card glass users-toolbar" data-animate="slide-up" style="--delay:0s;">
+ 
+    <form class="users-toolbar-left" method="GET" action="{% url 'adminapp:users' %}" id="usersFilterForm">
+      <!-- Search -->
+      <div class="users-search" id="usersSearch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+        </svg>
+        <input type="text" id="usersSearchInput" name="q" value="{{ q }}" placeholder="Search by name, email or phone...">
+      </div>
+ 
+      <!-- Role filter -->
+      <div class="users-select-wrap {% if role_filter %}has-value{% endif %}">
+        <select class="users-select" id="roleFilter" name="role" onchange="document.getElementById('usersFilterForm').submit();">
+          <option value="">All roles</option>
+          <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Admin</option>
+          <option value="manager" {% if role_filter == 'manager' %}selected{% endif %}>Manager</option>
+          <option value="user" {% if role_filter == 'user' %}selected{% endif %}>User</option>
+        </select>
+        <svg class="users-select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <!-- Status filter -->
+      <div class="users-select-wrap {% if status_filter %}has-value{% endif %}">
+        <select class="users-select" id="statusFilter" name="status" onchange="document.getElementById('usersFilterForm').submit();">
+          <option value="">All statuses</option>
+          <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+          <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+          <option value="suspended" {% if status_filter == 'suspended' %}selected{% endif %}>Suspended</option>
+        </select>
+        <svg class="users-select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+ 
+      <!-- Reset filters -->
+      <a href="{% url 'adminapp:users' %}" class="btn btn-ghost" id="resetFiltersBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset filters
+      </a>
+    </form>
+ 
+    <div class="users-toolbar-right">
+      <!-- Export -->
+      <a href="{% url 'adminapp:export_users' %}?q={{ q }}&role={{ role_filter }}&status={{ status_filter }}" class="btn btn-ghost" id="exportBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+        Export
+      </a>
+ 
+      <!-- Add new user -->
+      <button type="button" class="btn btn-primary btn-ripple" id="addUserBtn">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+        Add new user
+      </button>
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       USERS TABLE
+  ============================================================= -->
+  <div class="card glass users-table-card" data-animate="slide-up" style="--delay:.08s;">
+ 
+    <div class="users-table-scroll">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th class="col-avatar">Avatar</th>
+            <th>Full name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined date</th>
+            <th class="col-actions">Actions</th>
+          </tr>
+        </thead>
+ 
+        <tbody id="usersTableBody">
+          {% if users %}
+            {% for u in users %}
+            <tr class="user-row">
+              <td class="col-avatar">
+                <span class="user-avatar" data-field="avatar">{{ u.username|first|upper }}</span>
+              </td>
+              <td data-field="full_name">{{ u.first_name }} {{ u.last_name }}</td>
+              <td data-field="email">{{ u.email }}</td>
+              <td data-field="phone">—</td>
+              <td>
+                <span class="badge badge-role" data-field="role">
+                  {% if u.is_superuser %}Admin{% elif u.is_staff %}Manager{% else %}User{% endif %}
+                </span>
+              </td>
+              <td>
+                {% if u.is_active %}
+                  <span class="badge badge-success" data-field="status">Active</span>
+                {% else %}
+                  <span class="badge badge-danger" data-field="status">Inactive</span>
+                {% endif %}
+              </td>
+              <td data-field="joined_date">{{ u.date_joined|date:"M d, Y" }}</td>
+              <td class="col-actions">
+                <div class="row-actions">
+                  <button type="button" class="row-action-btn" data-action="view" aria-label="View user">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                  <button type="button" class="row-action-btn" data-action="edit" aria-label="Edit user">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg>
+                  </button>
+                  <button type="button" class="row-action-btn row-action-danger" data-action="delete" aria-label="Delete user">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          {% else %}
+            <tr class="empty-state-row" id="emptyStateRow">
+              <td colspan="8">
+                <div class="empty-state">
+                  <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                      <path d="M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                  </div>
+                  <h3 class="empty-state-title">No users found</h3>
+                  <p class="empty-state-desc">There are currently no registered users matching your criteria.</p>
+                  <button type="button" class="btn btn-primary btn-ripple" id="emptyStateAddUserBtn">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                    Add new user
+                  </button>
+                </div>
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+ 
+    <!-- ----------------------------------------------------------
+         Pagination — visible, inactive until data exists.
+         The backend can update the page label and re-enable the
+         prev/next buttons once results are available.
+    ----------------------------------------------------------- -->
+    <div class="users-pagination">
+      <span class="users-pagination-info">Page 1</span>
+      <div class="users-pagination-controls">
+        <button type="button" class="pagination-btn" id="prevPageBtn" disabled aria-label="Previous page">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <button type="button" class="pagination-btn" id="nextPageBtn" disabled aria-label="Next page">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- ============================================================
+       ROW TEMPLATE — not rendered. Clone this <template> from JS/
+       Django once real users exist; it is not counted as page
+       content and never appears until it is explicitly inserted.
+  ============================================================= -->
+  <template id="userRowTemplate">
+    <tr class="user-row">
+      <td class="col-avatar">
+        <span class="user-avatar" data-field="avatar">?</span>
+      </td>
+      <td data-field="full_name">—</td>
+      <td data-field="email">—</td>
+      <td data-field="phone">—</td>
+      <td><span class="badge badge-role" data-field="role">—</span></td>
+      <td><span class="badge" data-field="status">—</span></td>
+      <td data-field="joined_date">—</td>
+      <td class="col-actions">
+        <div class="row-actions">
+          <button type="button" class="row-action-btn" data-action="view" disabled aria-label="View user">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button type="button" class="row-action-btn" data-action="edit" disabled aria-label="Edit user">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4z"/></svg>
+          </button>
+          <button type="button" class="row-action-btn row-action-danger" data-action="delete" disabled aria-label="Delete user">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0l-1 14a2 2 0 01-2 2H7a2 2 0 01-2-2L4 6"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </template>
+ 
+  <!-- ============================================================
+       ADD USER MODAL
+  ============================================================= -->
+  <div class="modal-overlay" id="addUserModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Add new user</h2>
+        <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="{% url 'adminapp:add_user' %}" id="addUserForm">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <label for="full_name">Full name</label>
+            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="johndoe123" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="role">Role</label>
+            <div class="users-select-wrap">
+              <select class="users-select" id="role" name="role" required>
+                <option value="user">User</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
+              </select>
+              <svg class="users-select-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create user</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Messages Display -->
+  {% if messages %}
+  <div class="toast-container">
+    {% for message in messages %}
+      <div class="toast toast-{{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}
+ 
+{% block extra_js %}
+  <script src="{% static 'adminapp/js/users.js' %}"></script>
+{% endblock %}

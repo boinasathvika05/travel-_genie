@@ -1,0 +1,285 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}TravelGenie{% endblock %}</title>
+ 
+<!-- Fonts & icons -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet"
+      href="{% static 'mainapp/css/dashboard-style.css' %}">
+<link rel="stylesheet" href="{% static 'mainapp/css/chatbot.css' %}">
+
+<script>
+  if (localStorage.getItem('travelgenie_theme') === 'dark') {
+    document.documentElement.classList.add('dark-theme');
+  }
+</script>
+ 
+<!-- Page-specific stylesheet -->
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+
+{% if messages %}
+<div class="toast-container" id="toastContainer">
+  {% for message in messages %}
+  <div class="toast-alert alert-{{ message.tags }}">
+    <div class="toast-content">
+      <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-circle-check{% else %}fa-circle-info{% endif %}"></i>
+      <span>{{ message }}</span>
+    </div>
+    <button class="toast-close" onclick="this.parentElement.remove()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  {% endfor %}
+</div>
+<script>
+  setTimeout(() => {
+    const toastContainer = document.getElementById('toastContainer');
+    if (toastContainer) {
+      toastContainer.classList.add('fade-out');
+      setTimeout(() => toastContainer.remove(), 400);
+    }
+  }, 5000);
+</script>
+{% endif %}
+
+<div class="app-shell">
+ 
+  <!-- ======================= SIDEBAR ======================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <a href="{% url 'mainapp:dashboard' %}" class="logo-mark">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 3 3 10.5l7 2.5m11-10L13.5 21l-2.5-7m10-10L10.5 13.5" stroke="url(#gLogo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="gLogo" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#3F9AAE"/><stop offset="1" stop-color="#F47661"/></linearGradient></defs></svg>
+        <span>Travel<em>Genie</em></span>
+      </a>
+      <button class="icon-btn sidebar-close" id="sidebarClose" aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+ 
+    <nav class="nav-menu" aria-label="Primary">
+      <a href="{% url 'mainapp:dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <i class="fa-solid fa-grid-2"></i><span>Dashboard</span>
+      </a>
+      <a href="{% url 'mainapp:trip_planner' %}" class="nav-item {% if request.resolver_match.url_name == 'trip_planner' %}active{% endif %}">
+        <i class="fa-solid fa-route"></i><span>Trip Planner</span>
+      </a>
+      <a href="{% url 'mainapp:budget' %}" class="nav-item {% if request.resolver_match.url_name == 'budget' %}active{% endif %}">
+        <i class="fa-solid fa-sack-dollar"></i><span>Budget Planner</span>
+      </a>
+      <a href="{% url 'mainapp:hotels' %}" class="nav-item {% if request.resolver_match.url_name == 'hotels' %}active{% endif %}">
+        <i class="fa-solid fa-bed"></i><span>Hotels</span>
+      </a>
+      <a href="{% url 'mainapp:sightseeing' %}" class="nav-item {% if request.resolver_match.url_name == 'sightseeing' %}active{% endif %}">
+        <i class="fa-regular fa-camera-retro"></i><span>Sightseeing</span>
+      </a>
+      <a href="{% url 'mainapp:translator' %}" class="nav-item {% if request.resolver_match.url_name == 'translator' %}active{% endif %}">
+        <i class="fa-solid fa-language"></i><span>Translator</span>
+      </a>
+      <a href="{% url 'mainapp:emergency_guide' %}" class="nav-item {% if request.resolver_match.url_name == 'emergency' %}active{% endif %}">
+        <i class="fa-regular fa-shield"></i><span>Emergency Guide</span>
+      </a>
+      <a href="{% url 'mainapp:profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+        <i class="fa-regular fa-user"></i><span>Profile</span>
+      </a>
+    </nav>
+ 
+    <div class="premium-card">
+      <span class="premium-icon"><i class="fa-solid fa-crown"></i></span>
+      <p class="premium-title">Go Premium</p>
+      <p class="premium-text">Unlock exclusive deals &amp; personalized experiences.</p>
+      <a href="#" class="premium-btn" onclick="alert('Premium features are coming soon! Stay tuned.'); return false;">Upgrade Now</a>
+    </div>
+ 
+    <!-- If your logout URL name isn't 'logout', either rename it in urls.py
+         or change this href back to a {% templatetag openblock %} url ... {% templatetag closeblock %} tag pointing at it -->
+    <a href="#" class="logout-link" onclick="openLogoutModal(); return false;">
+  <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Logout</span>
+</a>
+  </aside>
+ 
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+ 
+  <!-- ======================= MAIN ======================= -->
+  <main class="main-content">
+ 
+    <!-- TOP NAVBAR -->
+    <header class="topbar">
+      <!-- <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button> -->
+ 
+      <div class="search-bar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="{% block search_placeholder %}Search destinations, hotels…{% endblock %}">
+      </div>
+ 
+      <div class="topbar-actions">
+        <div class="dropdown-wrapper">
+          <button class="icon-btn badge-btn" id="notifToggle" aria-label="Notifications">
+            <i class="fa-regular fa-bell"></i>
+            {% if unread_notifications_count %}<span class="badge">{{ unread_notifications_count }}</span>{% endif %}
+          </button>
+          <div class="dropdown-menu" id="notifMenu" style="min-width: 280px; right: 0; left: auto; margin-top: 10px;">
+            <div class="dropdown-head" style="padding-bottom: 12px; margin-bottom: 8px;">
+              <h4 style="margin: 0; font-size: 14px; color: var(--ink);">Notifications</h4>
+            </div>
+            <div class="dropdown-body empty-dropdown" style="padding: 16px; text-align: center; color: var(--ink-faint); font-size: 13px;">
+              <i class="fa-regular fa-bell-slash" style="font-size: 20px; display: block; margin-bottom: 8px; color: var(--border);"></i>
+              No new notifications
+            </div>
+          </div>
+        </div>
+ 
+        <div class="dropdown-wrapper">
+          <button class="icon-btn badge-btn" id="msgToggle" aria-label="Messages">
+            <i class="fa-regular fa-envelope"></i>
+            {% if unread_messages_count %}<span class="badge">{{ unread_messages_count }}</span>{% endif %}
+          </button>
+          <div class="dropdown-menu" id="msgMenu" style="min-width: 280px; right: 0; left: auto; margin-top: 10px;">
+            <div class="dropdown-head" style="padding-bottom: 12px; margin-bottom: 8px;">
+              <h4 style="margin: 0; font-size: 14px; color: var(--ink);">Messages</h4>
+            </div>
+            <div class="dropdown-body empty-dropdown" style="padding: 16px; text-align: center; color: var(--ink-faint); font-size: 13px;">
+              <i class="fa-regular fa-envelope" style="font-size: 20px; display: block; margin-bottom: 8px; color: var(--border);"></i>
+              No new messages
+            </div>
+          </div>
+        </div>
+        <button class="icon-btn theme-toggle" id="themeToggle" aria-label="Toggle theme">
+          <i class="fa-regular fa-moon"></i>
+        </button>
+ 
+        <div class="dropdown-wrapper">
+          <div class="user-menu" id="userMenuToggle">
+            <div class="user-avatar">
+              {% if request.user.profile_image %}
+                <img src="{{ request.user.profile_image.url }}" alt="{{ request.user.first_name|default:request.user.username }}">
+              {% else %}
+                <span>{{ request.user.first_name|default:request.user.username|first|upper }}</span>
+              {% endif %}
+            </div>
+            <div class="user-info">
+              <span class="user-hi">Hello, {{ request.user.first_name|default:request.user.username }}</span>
+              <span class="user-role">Explorer</span>
+            </div>
+            <i class="fa-solid fa-chevron-down user-caret"></i>
+          </div>
+
+          <div class="dropdown-menu" id="userDropdownMenu" style="min-width: 200px; right: 0; left: auto; margin-top: 10px;">
+            <div class="dropdown-head" style="padding-bottom: 12px; margin-bottom: 8px;">
+              <h4 style="margin: 0; font-size: 14px; color: var(--ink);">Account Settings</h4>
+            </div>
+            <div class="dropdown-body" style="display: flex; flex-direction: column; gap: 4px;">
+              <a href="{% url 'mainapp:profile' %}" style="display: flex; align-items: center; gap: 10px; padding: 10px; color: var(--ink); text-decoration: none; border-radius: var(--radius-sm); transition: background 0.2s; font-size: 13.5px;" onmouseover="this.style.background='var(--hover)'" onmouseout="this.style.background='transparent'">
+                <i class="fa-regular fa-user" style="color: var(--primary); width: 16px; text-align: center;"></i> My Profile
+              </a>
+              <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 10px; color: var(--ink); text-decoration: none; border-radius: var(--radius-sm); transition: background 0.2s; font-size: 13.5px;" onmouseover="this.style.background='var(--hover)'" onmouseout="this.style.background='transparent'" onclick="openLogoutModal(); return false;">
+                <i class="fa-solid fa-right-from-bracket" style="color: #E0554B; width: 16px; text-align: center;"></i> Logout
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+ 
+    {% block content %}{% endblock %}
+ 
+  </main>
+</div>
+ 
+<!-- Core Dashboard Script (Loaded centrally for all pages) -->
+<script src="{% static 'mainapp/js/dashboard-script.js' %}?v=1.1" defer></script>
+<script src="{% static 'mainapp/js/chatbot.js' %}?v=1.3" defer></script>
+
+{% block extra_js %}{% endblock %}
+
+<div class="chatbot-fab" id="chatbotFab" aria-label="Open chat">
+  <img src="{% static 'mainapp/images/chatbot_avatar.png' %}" alt="TravelGenie" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+</div>
+
+<div class="chatbot-panel" id="chatbotPanel">
+  <div class="chatbot-header">
+    <div class="chatbot-header-info">
+      <div class="chatbot-avatar">
+        <img src="{% static 'mainapp/images/chatbot_avatar.png' %}" alt="Bot" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+      </div>
+      <div class="chatbot-title">
+        <h4>TravelGenie Assistant</h4>
+        <p>Online</p>
+      </div>
+    </div>
+    <div class="chatbot-controls" style="display: flex; gap: 8px; align-items: center;">
+      <button class="chatbot-close" id="chatbotDecrease" aria-label="Decrease size"><i class="fa-solid fa-minus"></i></button>
+      <button class="chatbot-close" id="chatbotIncrease" aria-label="Increase size"><i class="fa-solid fa-plus"></i></button>
+      <button class="chatbot-close" id="chatbotClose" aria-label="Close chat"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages">
+    <!-- Initial greeting -->
+    <div class="chat-message bot">
+      <div class="chat-bubble">Hi there! 👋 I'm your TravelGenie Assistant. Need help planning your trip or managing your budget?</div>
+      <div class="chat-time">Now</div>
+    </div>
+  </div>
+  <div class="chatbot-input-area">
+    <div class="chatbot-input-wrapper">
+      <input type="text" id="chatbotInput" placeholder="Ask me anything...">
+    </div>
+    <button class="chatbot-send-btn" id="chatbotSendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+</div>
+<!-- Logout Modal -->
+<div id="logoutModal" class="logout-modal">
+
+    <div class="logout-box">
+
+        <div class="logout-icon">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </div>
+
+        <h2>Logout</h2>
+
+        <p>Are you sure you want to logout from TravelGenie?</p>
+
+        <div class="logout-buttons">
+
+            <button class="cancel-btn"
+                    onclick="closeLogoutModal()">
+                Cancel
+            </button>
+
+            <a href="{% url 'mainapp:logout' %}"
+               class="logout-btn">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+function openLogoutModal() {
+    document.getElementById("logoutModal").style.display = "flex";
+}
+
+function closeLogoutModal() {
+    document.getElementById("logoutModal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("logoutModal");
+    if (event.target === modal) {
+        closeLogoutModal();
+    }
+}
+</script>
+</body>
+</html>
