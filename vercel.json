@@ -1,0 +1,15 @@
+﻿{
+  "version": 2,
+  "builds": [
+    {
+      "src": "TravelGenie/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "TravelGenie/wsgi.py"
+    }
+  ]
+}
