@@ -136,6 +136,11 @@ else:
         }
     }
 
+# Use cookie-based sessions for seamless persistence across Vercel serverless functions
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+SESSION_COOKIE_AGE = 1209600  # 2 weeks
+
+
 
 
 
