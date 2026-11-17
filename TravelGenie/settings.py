@@ -83,19 +83,28 @@ WSGI_APPLICATION = 'TravelGenie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.environ.get('DATABASE_URL'):
+db_url = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
+
+if db_url:
     from urllib.parse import urlparse, parse_qs
-    url = os.environ.get('DATABASE_URL')
-    parsed = urlparse(url)
+    parsed = urlparse(db_url)
     qs = parse_qs(parsed.query)
     options = {}
     if 'sslmode' in qs:
         options['sslmode'] = qs['sslmode'][0]
+    else:
+        options['sslmode'] = 'require'
+
+    if 'options' in qs:
+        options['options'] = qs['options'][0]
+    elif parsed.hostname and 'neon.tech' in parsed.hostname:
+        endpoint = parsed.hostname.split('.')[0]
+        options['options'] = f'endpoint={endpoint}'
     
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': parsed.path.lstrip('/'),
+            'NAME': parsed.path.lstrip('/') or 'neondb',
             'USER': parsed.username,
             'PASSWORD': parsed.password,
             'HOST': parsed.hostname,
