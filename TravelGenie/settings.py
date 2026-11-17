@@ -83,7 +83,14 @@ WSGI_APPLICATION = 'TravelGenie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if os.environ.get('DATABASE_URL'):
+if os.environ.get('USE_IN_MEMORY_DB') == 'True':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+elif os.environ.get('DATABASE_URL'):
     import dj_database_url
     DATABASES = {
         'default': dj_database_url.config(
@@ -93,9 +100,16 @@ if os.environ.get('DATABASE_URL'):
         )
     }
 else:
-    # On Vercel / serverless functions, the root filesystem (/var/task) is strictly read-only.
-    # We copy the pre-seeded SQLite database to the writable /tmp directory.
-    if os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+    # On Vercel / AWS Lambda, the root filesystem (/var/task) is strictly read-only.
+    # We copy the pre-seeded SQLite database to the writable /tmp directory (temporary RAM-backed storage).
+    is_serverless = (
+        os.environ.get('VERCEL')
+        or os.environ.get('AWS_LAMBDA_FUNCTION_NAME')
+        or os.environ.get('LAMBDA_TASK_ROOT')
+        or str(BASE_DIR).startswith('/var/task')
+        or not os.access(str(BASE_DIR), os.W_OK)
+    )
+    if is_serverless:
         tmp_db = '/tmp/db.sqlite3'
         orig_db = os.path.join(BASE_DIR, 'db.sqlite3')
         if not os.path.exists(tmp_db) and os.path.exists(orig_db):
@@ -110,6 +124,7 @@ else:
             'NAME': db_path,
         }
     }
+
 
 
 
