@@ -40,9 +40,13 @@
 
  
     <!-- Form -->
-    <form class="login-form" id="loginForm" method="post" action="{% url 'mainapp:login' %}">
+    <form class="login-form" id="loginForm" method="post" action="{% url 'mainapp:login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
       {% csrf_token %}
       <input type="hidden" name="login_mode" id="loginMode" value="{{ login_mode|default:'user' }}">
+      {% if request.GET.next %}
+      <input type="hidden" name="next" value="{{ request.GET.next }}">
+      {% endif %}
+
  
       <div class="form-group">
         <label for="username">Username</label>

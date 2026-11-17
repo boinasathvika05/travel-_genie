@@ -50,9 +50,9 @@ def dashboard(request):
         "greeting": greeting
     })
 
-@login_required(login_url='mainapp:login')
 def trip_planner(request):
     return render(request, 'mainapp/trip_planner.html')
+
 
 
 def budget(request):
@@ -177,7 +177,12 @@ def user_login(request):
 
             login(request, user)
 
+            next_url = request.GET.get('next') or request.POST.get('next')
+            if next_url:
+                return redirect(next_url)
+
             return redirect("mainapp:dashboard")
+
 
         else:
             return render(request, "mainapp/login.html", {
