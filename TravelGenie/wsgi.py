@@ -14,5 +14,19 @@ from django.core.wsgi import get_wsgi_application
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TravelGenie.settings')
 
 application = get_wsgi_application()
+
+# Run migrations automatically on Vercel if DATABASE_URL is provided
+if os.environ.get('DATABASE_URL'):
+    try:
+        from django.core.management import call_command
+        call_command('migrate', interactive=False)
+        try:
+            from seed_data import seed_data
+            seed_data()
+        except Exception:
+            pass
+    except Exception as e:
+        print(f"Auto-migration notice: {e}")
+
 app = application
 

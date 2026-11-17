@@ -84,14 +84,27 @@ WSGI_APPLICATION = 'TravelGenie.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 if os.environ.get('DATABASE_URL'):
-    import dj_database_url
+    from urllib.parse import urlparse, parse_qs
+    url = os.environ.get('DATABASE_URL')
+    parsed = urlparse(url)
+    qs = parse_qs(parsed.query)
+    options = {}
+    if 'sslmode' in qs:
+        options['sslmode'] = qs['sslmode'][0]
+    
     DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': parsed.path.lstrip('/'),
+            'USER': parsed.username,
+            'PASSWORD': parsed.password,
+            'HOST': parsed.hostname,
+            'PORT': parsed.port or 5432,
+            'OPTIONS': options,
+            'CONN_MAX_AGE': 600,
+        }
     }
+
 else:
     # On Vercel / AWS Lambda, the root filesystem (/var/task) is strictly read-only.
     # We copy the pre-seeded SQLite database to the writable /tmp directory.
