@@ -9,7 +9,15 @@ django.setup()
 from mainapp.models import Booking, Hotel, Destination
 
 def seed_data():
+    from django.contrib.auth.models import User
+
+    # Ensure admin user exists
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("admin", "admin@travelgenie.com", "admin123")
+        print("Created default admin user: admin / admin123")
+
     if not Booking.objects.exists():
+
         print("Creating mock bookings...")
         names = ["Alice Smith", "Bob Jones", "Charlie Brown", "Diana Prince", "Ethan Hunt"]
         destinations = ["Paris, France", "Tokyo, Japan", "New York, USA", "London, UK", "Rome, Italy"]

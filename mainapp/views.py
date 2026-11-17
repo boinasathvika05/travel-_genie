@@ -6,8 +6,10 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from .models import ContactMessage
+
 
 def home(request):
     return render(request, 'mainapp/index.html')
@@ -140,15 +142,28 @@ def user_login(request):
 
     if request.method == "POST":
 
-        username = request.POST["username"]
-        password = request.POST["password"]
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
         login_mode = request.POST.get("login_mode", "user")
 
+        # 1. Try standard authentication
         user = authenticate(
             request,
             username=username,
             password=password
         )
+
+        # 2. Try email match if an email address was entered
+        if user is None and "@" in username:
+            matched_user = User.objects.filter(email__iexact=username).first()
+            if matched_user:
+                user = authenticate(request, username=matched_user.username, password=password)
+
+        # 3. Try case-insensitive username match
+        if user is None:
+            matched_user = User.objects.filter(username__iexact=username).first()
+            if matched_user:
+                user = authenticate(request, username=matched_user.username, password=password)
 
         if user is not None:
 
@@ -183,14 +198,24 @@ def user_login(request):
 
             return redirect("mainapp:dashboard")
 
-
         else:
+            # Check if user exists in database to give precise error
+            account_exists = User.objects.filter(
+                Q(username__iexact=username) | Q(email__iexact=username)
+            ).exists()
+
+            if account_exists:
+                error_msg = "Incorrect password. Please try again."
+            else:
+                error_msg = f"No account found for '{username}'. Please register first."
+
             return render(request, "mainapp/login.html", {
-                "error": "Invalid username or password.",
+                "error": error_msg,
                 "login_mode": login_mode
             })
 
     return render(request, "mainapp/login.html")
+
 
 import json
 import os
