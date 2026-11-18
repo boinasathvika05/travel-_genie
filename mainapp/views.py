@@ -275,6 +275,46 @@ def chatbot_api(request):
     return JsonResponse({"error": "Invalid request"}, status=400)
 
 from django.views.decorators.csrf import csrf_exempt
+import re
+import urllib.parse
+import urllib.request
+
+def clean_itinerary_images(html_content):
+    """Clean broken image URLs (e.g. loremflickr) and ensure reliable high-res thumbnails."""
+    def replace_img(match):
+        img_tag = match.group(0)
+        alt_match = re.search(r'alt=["\']([^"\']+)["\']', img_tag, re.IGNORECASE)
+        src_match = re.search(r'src=["\']([^"\']+)["\']', img_tag, re.IGNORECASE)
+        
+        alt_text = alt_match.group(1).strip() if alt_match else ""
+        src_text = src_match.group(1).strip() if src_match else ""
+        
+        keyword = alt_text or src_text.split('/')[-1]
+        keyword = re.sub(r'https?://[^\s]+', '', keyword)
+        keyword = re.sub(r'[^a-zA-Z0-9\s\-_]', '', keyword).strip()
+        if not keyword:
+            keyword = "travel destination"
+            
+        slug = re.sub(r'[^a-zA-Z0-9]', '', keyword.lower()) or "travel"
+        fallback_url = f"https://picsum.photos/seed/{slug}/600/350"
+        
+        final_src = fallback_url
+        try:
+            # Query Wikipedia for actual landmark/place photo
+            search_term = " ".join(keyword.split()[:2])
+            wiki_url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{urllib.parse.quote(search_term)}"
+            req = urllib.request.Request(wiki_url, headers={'User-Agent': 'TravelGenieApp/1.0'})
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                data = json.loads(resp.read().decode())
+                thumb = data.get('thumbnail', {}).get('source')
+                if thumb:
+                    final_src = thumb
+        except Exception:
+            pass
+            
+        return f'<img src="{final_src}" alt="{alt_text or keyword}" class="itinerary-img" loading="lazy" onerror="this.onerror=null;this.src=\'{fallback_url}\';">'
+
+    return re.sub(r'<img\b[^>]*>', replace_img, html_content, flags=re.IGNORECASE)
 
 @csrf_exempt
 def generate_itinerary(request):
@@ -301,7 +341,10 @@ def generate_itinerary(request):
                 "You are TravelGenie Assistant, an expert travel planner. "
                 "Generate a detailed, day-by-day itinerary based on the user's criteria. "
                 "Format the response beautifully in HTML, using <h3> for days, <ul> for activities, and <p> for descriptions. "
-                "Do NOT include markdown blockquotes (```html). Just output raw HTML. Include placeholder images if relevant using <img src='https://loremflickr.com/600/400/destination'> style tags."
+                "Do NOT include markdown blockquotes (```html). Just output raw HTML. "
+                "Include a relevant destination or landmark image for each day using: "
+                "<img src='https://picsum.photos/seed/{keyword}/600/350' alt='{Landmark or Destination Name}' class='itinerary-img'> "
+                "where {keyword} is a short lowercase alphanumeric tag (e.g. tokyo, kyoto, shinkansen, temple, food, museum)."
             )
             
             user_message = f"Please plan a trip from {from_loc} to {to_loc}. Dates: {departure_date} to {return_date}. Travelers: {travelers}. Budget: {budget}. Style: {travel_style}. Interests: {interests}. Additional details: {user_prompt}"
@@ -316,6 +359,8 @@ def generate_itinerary(request):
             )
             
             itinerary_html = chat_completion.choices[0].message.content
+            # Post-process to ensure images are fast, valid, and never broken
+            itinerary_html = clean_itinerary_images(itinerary_html)
             return JsonResponse({"itinerary": itinerary_html})
             
         except Exception as e:

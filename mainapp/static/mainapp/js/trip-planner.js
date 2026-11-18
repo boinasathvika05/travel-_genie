@@ -138,6 +138,28 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (data.itinerary) {
         itineraryResult.innerHTML = data.itinerary;
+
+        // Ensure all images load cleanly or fallback gracefully
+        itineraryResult.querySelectorAll('img').forEach(img => {
+          img.classList.add('itinerary-img');
+          img.loading = 'lazy';
+          
+          img.addEventListener('error', function() {
+            if (!this.dataset.fallbackTried) {
+              this.dataset.fallbackTried = "true";
+              const tag = encodeURIComponent((this.alt || 'travel').replace(/[^a-zA-Z0-9]/g, '').toLowerCase()) || 'scenery';
+              this.src = `https://picsum.photos/seed/${tag}/600/350`;
+            } else {
+              // Never display a broken image icon box to the user
+              this.style.display = 'none';
+            }
+          });
+        });
+
+        // Smoothly scroll to results if on smaller screens
+        if (window.innerWidth <= 1180) {
+          itineraryResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       } else {
         itineraryResult.innerHTML = `<p style="color:red">Error: ${data.error || 'Failed to generate itinerary'}</p>`;
       }
